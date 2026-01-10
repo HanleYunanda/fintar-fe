@@ -1,0 +1,4 @@
+/* Basic transitions for sidebar */
+aside {
+    transition: width 0.3s ease;
+}
