@@ -1,0 +1,115 @@
+<div class="product-container">
+    <p-toast></p-toast>
+
+    <p-card>
+        <ng-template pTemplate="header">
+            <div class="flex justify-between items-center p-4">
+                <h2 class="text-xl font-semibold m-0 text-blue-800">Product Management</h2>
+                <p-button label="Add Product" icon="pi pi-plus" (click)="openCreateDialog()"
+                    severity="success"></p-button>
+            </div>
+        </ng-template>
+
+        <p-table [value]="products()" [loading]="loading()" [paginator]="true" [rows]="10"
+            [rowsPerPageOptions]="[5, 10, 20]" [globalFilterFields]="['plafond.name']" class="p-datatable-sm"
+            [tableStyle]="{ 'min-width': '50rem' }">
+
+            <ng-template pTemplate="caption">
+                <div class="flex justify-between items-center">
+                    <span class="p-input-icon-left w-full md:w-auto">
+                        <i class="pi pi-search me-3"></i>
+                        <input pInputText type="text" placeholder="Search product..." class="w-full md:w-80"
+                            #searchInput (input)="searchValue.set(searchInput.value)" />
+                    </span>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="plafond.name">Plafond <p-sortIcon field="plafond.name"></p-sortIcon></th>
+                    <th pSortableColumn="tenor" class="text-right">Tenor <p-sortIcon field="tenor"></p-sortIcon></th>
+                    <th pSortableColumn="interestRate" class="text-right">Interest Rate <p-sortIcon
+                            field="interestRate"></p-sortIcon></th>
+                    <th class="text-right">Max Amount</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-product>
+                <tr>
+                    <td>
+                        <div class="flex flex-col">
+                            <span class="font-medium text-gray-700">{{ product.plafond.name }}</span>
+                            <small class="text-gray-400 font-mono text-xs">{{ product.id }}</small>
+                        </div>
+                    </td>
+                    <td class="text-right text-gray-600">
+                        {{ product.tenor }} months
+                    </td>
+                    <td class="text-right font-semibold text-green-600">
+                        {{ product.interestRate }}%
+                    </td>
+                    <td class="text-right font-medium text-blue-600">
+                        {{ product.plafond.maxAmount | currency:'IDR':'symbol':'1.0-0' }}
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center py-8">
+                        <i class="pi pi-box text-4xl text-gray-400 mb-3"></i>
+                        <p class="text-gray-500">No product found</p>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+
+    <!-- Create Dialog -->
+    <p-dialog header="Add New Product" [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '450px' }"
+        [draggable]="false" [resizable]="false">
+
+        <div class="flex flex-col gap-5 py-4">
+            <!-- Plafond Selection -->
+            <div class="flex flex-col gap-2">
+                <label for="plafond" class="font-semibold text-gray-700">Select Plafond <span
+                        class="text-red-500">*</span></label>
+                <p-select id="plafond" [options]="availablePlafonds()" [(ngModel)]="productForm().plafondId"
+                    optionLabel="name" optionValue="id" placeholder="Choose a plafond" appendTo="body" class="w-full">
+                    <ng-template let-item pTemplate="item">
+                        <div class="flex justify-between w-full">
+                            <span>{{item.name}}</span>
+                            <small class="text-gray-400 text-xs">Max: {{item.maxAmount |
+                                currency:'IDR':'symbol':'1.0-0'}}</small>
+                        </div>
+                    </ng-template>
+                </p-select>
+            </div>
+
+            <!-- Tenor -->
+            <div class="flex flex-col gap-2">
+                <label for="tenor" class="font-semibold text-gray-700">Tenor (1-48 Months) <span
+                        class="text-red-500">*</span></label>
+                <p-inputNumber id="tenor" [(ngModel)]="productForm().tenor" [min]="1" [max]="48"
+                    placeholder="Enter tenor" class="w-full" suffix=" months">
+                </p-inputNumber>
+                <small class="text-gray-500">Maximum allowed is often determined by Plafond settings.</small>
+            </div>
+
+            <!-- Interest Rate -->
+            <div class="flex flex-col gap-2">
+                <label for="interestRate" class="font-semibold text-gray-700">Interest Rate (%) <span
+                        class="text-red-500">*</span></label>
+                <p-inputNumber id="interestRate" [(ngModel)]="productForm().interestRate" [min]="0" [max]="100"
+                    [minFractionDigits]="1" [maxFractionDigits]="2" placeholder="Enter interest rate" class="w-full"
+                    suffix="%">
+                </p-inputNumber>
+            </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+            <p-button label="Cancel" severity="secondary" (click)="closeDialog()" [text]="true"></p-button>
+            <p-button label="Save Product" (click)="saveProduct()" severity="success" [loading]="loading()"></p-button>
+        </ng-template>
+    </p-dialog>
+</div>

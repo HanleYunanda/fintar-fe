@@ -43,7 +43,12 @@ export class AuthService {
         return user ? JSON.parse(user) : null;
     }
 
+    isLoggedIn(): boolean {
+        return !!this.getToken() && !!this.getUser();
+    }
+
     logout(): void {
         localStorage.removeItem(this.TOKEN_KEY);
+        localStorage.removeItem('user');
     }
 }
