@@ -69,7 +69,7 @@ export class Login {
       next: (response: ApiResponse<LoginResponse>) => {
         this.isLoading.set(false);
         console.log('Login success', response);
-        this.router.navigate(['/']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err: any) => {
         this.isLoading.set(false);

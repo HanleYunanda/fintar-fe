@@ -1,0 +1,227 @@
+<div class="space-y-6">
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
+    <!-- Header / Back Button / Actions -->
+    <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+        <div class="flex items-center gap-4">
+            <p-button icon="pi pi-arrow-left" (click)="goBack()" [text]="true" severity="secondary"></p-button>
+            <h1 class="text-2xl font-bold text-gray-800">Loan Details</h1>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-2">
+            <p-button *ngIf="canReview()" label="Review" icon="pi pi-eye" severity="info"
+                (click)="openActionDialog('REVIEW')"></p-button>
+
+            <ng-container *ngIf="canApprove()">
+                <p-button label="Approve" icon="pi pi-check" severity="success"
+                    (click)="openActionDialog('APPROVE')"></p-button>
+                <p-button label="Reject" icon="pi pi-times" severity="danger"
+                    (click)="openActionDialog('REJECT')"></p-button>
+            </ng-container>
+
+            <p-button *ngIf="canDisburse()" label="Disburse" icon="pi pi-wallet" severity="help"
+                (click)="openActionDialog('DISBURSE')"></p-button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="space-y-4">
+        <p-skeleton height="200px"></p-skeleton>
+        <p-skeleton height="300px"></p-skeleton>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!loading() && loan() as l" class="space-y-6 fadein animation-duration-300">
+        <!-- Top Section: Loan Summary -->
+        <p-card class="shadow-sm border border-slate-100">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <div class="text-sm text-gray-500 mb-1">Loan ID: {{ l.id }}</div>
+                    <div class="text-xl font-bold text-primary-700">{{ l.product?.plafond?.name }}</div>
+                </div>
+                <p-tag [value]="l.status" [severity]="getSeverity(l.status)"
+                    [style]="{'font-size': '1rem', 'padding': '0.5rem 1rem'}"></p-tag>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div>
+                    <label class="text-gray-500 text-sm block mb-1">Principal Debt</label>
+                    <span class="text-lg font-semibold">{{ l.principalDebt | currency:'IDR':'symbol':'1.0-0' }}</span>
+                </div>
+                <div>
+                    <label class="text-gray-500 text-sm block mb-1">Tenor</label>
+                    <span class="text-lg font-semibold">{{ l.tenor }} Months</span>
+                </div>
+                <div>
+                    <label class="text-gray-500 text-sm block mb-1">Outstanding</label>
+                    <span class="text-lg font-semibold">{{ l.outstandingDebt | currency:'IDR':'symbol':'1.0-0' }}</span>
+                </div>
+                <div>
+                    <label class="text-gray-500 text-sm block mb-1">Monthly Installment</label>
+                    <span class="text-xl font-bold text-emerald-600">{{ l.installmentPayment |
+                        currency:'IDR':'symbol':'1.0-0' }}</span>
+                </div>
+            </div>
+        </p-card>
+
+        <!-- Tabs Section -->
+        <div class="card p-0 overflow-hidden">
+            <p-tabs value="0">
+                <p-tablist>
+                    <p-tab value="0">Customer Detail</p-tab>
+                    <p-tab value="1">History Status</p-tab>
+                    <p-tab value="2">Previous Loans</p-tab>
+                </p-tablist>
+                <p-tabpanels>
+                    <!-- Tab 1: Customer Detail -->
+                    <p-tabpanel value="0">
+                        <div *ngIf="customer() as c; else noCustomer" class="p-4">
+                            <!-- Basic Info -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
+                                <div class="flex items-center gap-4 col-span-full mb-2">
+                                    <div
+                                        class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 text-2xl font-bold">
+                                        {{ c.user?.username?.charAt(0)?.toUpperCase() }}
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-bold">{{ c.fullName }}</h3>
+                                        <p class="text-gray-500">{{ c.user?.email }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-gray-700 border-b pb-2">Personal Information</h4>
+                                    <div><label class="text-gray-500 text-sm">NIK (KTP)</label>
+                                        <p class="font-medium">{{ c.nationalId }}</p>
+                                    </div>
+                                    <div><label class="text-gray-500 text-sm">Place & Date of Birth</label>
+                                        <p class="font-medium">{{ c.placeOfBirth }}, {{ c.dateOfBirth |
+                                            date:'mediumDate' }}</p>
+                                    </div>
+                                    <div><label class="text-gray-500 text-sm">Marital Status</label>
+                                        <p class="font-medium">{{ c.maritalStatus }}</p>
+                                    </div>
+                                    <div><label class="text-gray-500 text-sm">Religion</label>
+                                        <p class="font-medium">{{ c.religion }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-gray-700 border-b pb-2">Contact & Job</h4>
+                                    <div><label class="text-gray-500 text-sm">Phone</label>
+                                        <p class="font-medium">{{ c.phoneNumber }}</p>
+                                    </div>
+                                    <div><label class="text-gray-500 text-sm">Address</label>
+                                        <p class="font-medium">{{ c.address }}</p>
+                                    </div>
+                                    <div><label class="text-gray-500 text-sm">Job / Workplace</label>
+                                        <p class="font-medium">{{ c.job }} at {{ c.workplace }}</p>
+                                    </div>
+                                    <div><label class="text-gray-500 text-sm">Salary</label>
+                                        <p class="font-medium">{{ c.salary | currency:'IDR':'symbol':'1.0-0' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Documents -->
+                            <div *ngIf="documents().length > 0">
+                                <h4 class="font-bold text-gray-700 border-b pb-2 mb-4">Documents</h4>
+                                <div class="flex flex-wrap gap-4">
+                                    <div *ngFor="let doc of documents()" class="border rounded p-2">
+                                        <p class="text-sm font-bold text-center mb-2">{{ doc.docType }}</p>
+                                        <p-image src="{{ baseUri + '/' + doc.id}}" alt="Image" width="250"
+                                            [preview]="true" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-template #noCustomer>
+                            <div class="p-4 text-gray-500 italic">Customer details not available.</div>
+                        </ng-template>
+                    </p-tabpanel>
+
+                    <!-- Tab 2: Status History -->
+                    <p-tabpanel value="1">
+                        <p-table [value]="l.loanStatusHistories" [rowHover]="true" class="p-datatable-sm"
+                            sortField="performedAt" [sortOrder]="1">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                    <th>Performed By</th>
+                                    <th>Note</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-h>
+                                <tr>
+                                    <td>{{ h.performedAt | date:'medium' }}</td>
+                                    <td><p-tag [value]="h.action" [severity]="getSeverity(h.action)"></p-tag></td>
+                                    <td>{{ h.performedBy?.username || '-' }}</td>
+                                    <td class="italic text-gray-600">{{ h.note || '-' }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="4" class="text-center p-4">No history available</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-tabpanel>
+
+                    <!-- Tab 3: Transaction History -->
+                    <p-tabpanel value="2">
+                        <p-table [value]="previousLoans()" [rowHover]="true" class="p-datatable-sm">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Principal</th>
+                                    <th>Date</th>
+                                    <th>Last Status</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-prev>
+                                <tr>
+                                    <td>{{ prev.product?.plafond?.name }}</td>
+                                    <td>{{ prev.principalDebt | currency:'IDR':'symbol':'1.0-0' }}</td>
+                                    <td>{{ prev.createdAt | date:'mediumDate' }}</td>
+                                    <td><p-tag [value]="prev.status" [severity]="getSeverity(prev.status)"></p-tag></td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="4" class="text-center p-4">No other loan history found.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-tabpanel>
+                </p-tabpanels>
+            </p-tabs>
+        </div>
+    </div>
+
+    <!-- Action Dialog -->
+    <p-dialog [(visible)]="actionDialogVisible" [modal]="true" [style]="{width: '450px'}"
+        [header]="(currentAction() || '') + ' Loan'">
+        <div class="flex flex-col gap-4">
+            <p class="text-gray-600">
+                Please confirm you want to {{ currentAction()?.toLowerCase() }} this loan.
+                <span *ngIf="currentAction() === 'REJECT'" class="text-red-500 font-bold">* Note is required for
+                    rejection.</span>
+            </p>
+            <div class="flex flex-col gap-2">
+                <label for="note" class="font-bold text-gray-700">Note</label>
+                <textarea pInputTextarea id="note" [(ngModel)]="actionNote" rows="3"
+                    placeholder="Enter any notes or remarks here..."></textarea>
+            </div>
+        </div>
+        <ng-template pTemplate="footer">
+            <p-button label="Cancel" icon="pi pi-times" (click)="actionDialogVisible.set(false)" [text]="true"
+                severity="secondary"></p-button>
+            <p-button label="Confirm" icon="pi pi-check" (click)="submitAction()" [loading]="actionLoading()"
+                [severity]="currentAction() === 'REJECT' ? 'danger' : 'success'"></p-button>
+        </ng-template>
+    </p-dialog>
+</div>

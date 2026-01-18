@@ -39,17 +39,17 @@ export class LandingPage implements OnInit {
     {
       title: 'Pinjaman Cepat & Transparan',
       description: 'Dapatkan dana darurat atau modal usaha dengan proses 100% online.',
-      image: 'https://images.unsplash.com/photo-1573163281534-dd0a844932d8?q=80&w=2070&auto=format&fit=crop', // Financial growth
+      image: '/wallet-card.webp', // Financial growth
     },
     {
       title: 'Bunga Rendah, Tenor Fleksibel',
       description: 'Pilihan tenor hingga 12 bulan dengan suku bunga kompetitif.',
-      image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2111&auto=format&fit=crop', // Calculator/Money
+      image: '/money-calc.webp', // Calculator/Money
     },
     {
       title: 'Terdaftar & Diawasi oleh OJK',
       description: 'Privasi data dan kenyamanan Anda adalah prioritas utama kami.',
-      image: 'https://images.unsplash.com/photo-1560472355-536de3962603?q=80&w=2070&auto=format&fit=crop', // Modern office/Team
+      image: '/office-calc.webp', // Modern office/Team
     }
   ];
 

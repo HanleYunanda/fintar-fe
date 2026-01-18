@@ -29,10 +29,10 @@
                 </div>
 
                 <!-- Password -->
-                <div class="mb-8">
+                <div class="mb-6">
                     <p-floatLabel>
                         <p-password id="password" formControlName="password" [feedback]="false" [toggleMask]="true"
-                            class="w-full" inputclass="w-full"></p-password>
+                            styleClass="w-full" inputStyleClass="w-full"></p-password>
                         <label for="password">Password</label>
                     </p-floatLabel>
                     @if (loginForm.controls.password.touched && loginForm.controls.password.getError('required')) {
@@ -42,7 +42,7 @@
 
                 <!-- Submit Button -->
                 <div class="flex flex-col gap-4">
-                    <p-button label="Login" type="submit" [loading]="isLoading()" class="w-full"
+                    <p-button label="Login" type="submit" [loading]="isLoading()" styleClass="w-full"
                         [disabled]="loginForm.invalid"></p-button>
 
                     <div class="text-center text-sm text-slate-500">

@@ -47,6 +47,10 @@ export class AuthService {
         return !!this.getToken() && !!this.getUser();
     }
 
+    getCurrentUser(): Observable<ApiResponse<LoginResponse>> {
+        return this.http.get<ApiResponse<LoginResponse>>(`${this.API_URL}/me`);
+    }
+
     logout(): void {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem('user');

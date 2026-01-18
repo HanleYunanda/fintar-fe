@@ -1,59 +1,60 @@
-<div class="layout-wrapper flex h-screen bg-slate-50 overflow-hidden">
-    <!-- Sidebar (Full Height) -->
-    <aside class="bg-white border-r border-slate-200 transition-all duration-300 shrink-0 flex flex-col h-full"
-        [ngClass]="{'w-64': isSidebarVisible(), 'w-0 overflow-hidden': !isSidebarVisible()}">
-
-        <div class="p-6 border-b border-slate-100 flex items-center gap-3 h-[74px]"> <!-- Matches Header Height -->
-            <img src="/logo-fintar.png" alt="FINTAR" class="h-10 w-auto" />
-            <span class="text-xl font-bold tracking-tight text-primary-700 truncate"
-                *ngIf="isSidebarVisible()">FINTAR</span>
-        </div>
-
-        <div class="flex-1 overflow-y-auto py-4">
-            <p-menu [model]="items" class="w-full border-none"></p-menu>
-        </div>
-
-        <div class="p-4 border-t border-slate-100 text-xs text-center text-slate-400">
-            v1.0.0
-        </div>
-    </aside>
-
-    <!-- Main Content Wrapper (Right Side) -->
-    <div class="flex flex-1 flex-col h-full overflow-hidden relative transition-all duration-300">
-        <!-- Header -->
-        <header class="sticky top-0 z-50 shadow-sm shrink-0">
-            <p-toolbar class="bg-white border-none rounded-none px-6 py-3">
-                <div class="p-toolbar-group-start flex items-center gap-4">
-                    <p-button icon="pi pi-bars" (click)="toggleSidebar()" class="p-button-text p-button-secondary"
-                        [rounded]="true" [text]="true"></p-button>
-                    <div class="md:hidden flex items-center gap-2">
-                        <!-- Mobile Logo if needed, but sidebar toggle is there -->
-                    </div>
+<div class="layout-wrapper flex flex-col h-screen bg-slate-50 overflow-hidden">
+    <!-- Full Width Header -->
+    <header class="z-50 shadow-sm shrink-0 border-b border-slate-200 bg-white">
+        <p-toolbar class="bg-white border-none rounded-none px-6 py-3">
+            <div class="p-toolbar-group-start flex items-center gap-6">
+                <!-- Logo moved here -->
+                <div class="flex items-center gap-3">
+                    <img src="/logo-fintar.png" alt="FINTAR" class="h-10 w-auto" />
+                    <span class="hidden md:block text-xl font-bold tracking-tight text-primary-700">FINTAR</span>
                 </div>
-                <div class="p-toolbar-group-end flex items-center gap-4">
-                    <p-button icon="pi pi-bell" class="p-button-rounded p-button-text p-button-secondary" pBadge
-                        value="2"></p-button>
-                    <div class="flex items-center gap-3 border-l pl-4 border-slate-200">
-                        <div class="hidden md:block text-right">
-                            <div class="text-sm font-semibold text-slate-800">{{ user.username }}</div>
-                            <div class="text-xs text-slate-500">{{ user.roles[0] }}</div>
-                        </div>
-                        <p-avatar icon="pi pi-user" class="cursor-pointer bg-primary-100 text-primary-700"
-                            shape="circle" (click)="userMenu.toggle($event)"></p-avatar>
-                        <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
+
+                <p-button icon="pi pi-bars" (click)="toggleSidebar()" class="p-button-text p-button-secondary"
+                    [rounded]="true" [text]="true"></p-button>
+            </div>
+
+            <div class="p-toolbar-group-end flex items-center gap-4">
+                <p-button icon="pi pi-bell" class="p-button-rounded p-button-text p-button-secondary" pBadge
+                    value="2"></p-button>
+                <div class="flex items-center gap-3 border-l pl-4 border-slate-200">
+                    <div class="hidden md:block text-right">
+                        <div class="text-sm font-semibold text-slate-800">{{ user.username }}</div>
+                        <div class="text-xs text-slate-500">{{ user.roles[0] }}</div>
                     </div>
+                    <p-avatar icon="pi pi-user" class="cursor-pointer bg-primary-100 text-primary-700" shape="circle"
+                        (click)="userMenu.toggle($event)"></p-avatar>
+                    <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
                 </div>
-            </p-toolbar>
-        </header>
+            </div>
+        </p-toolbar>
+    </header>
 
-        <!-- Main Content (Scrollable) -->
-        <main class="flex-1 overflow-y-auto p-6">
-            <router-outlet></router-outlet>
-        </main>
+    <!-- Content Area (Sidebar + Main) -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar (Below Header) -->
+        <aside class="bg-white border-r border-slate-200 transition-all duration-300 shrink-0 flex flex-col h-full"
+            [ngClass]="{'w-64': isSidebarVisible(), 'w-0 overflow-hidden': !isSidebarVisible()}">
 
-        <!-- Footer -->
-        <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-sm text-slate-500 shrink-0">
-            &copy; 2026 FINTAR Digital Banking System. All rights reserved.
-        </footer>
+            <div class="flex-1 overflow-y-auto py-4">
+                <p-menu [model]="items" class="w-full border-none"></p-menu>
+            </div>
+
+            <div class="p-4 border-t border-slate-100 text-xs text-center text-slate-400">
+                v1.0.0
+            </div>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="flex flex-1 flex-col h-full overflow-hidden relative">
+            <!-- Main Content (Scrollable) -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <router-outlet></router-outlet>
+            </main>
+
+            <!-- Footer -->
+            <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-sm text-slate-500 shrink-0">
+                &copy; 2026 FINTAR Digital Banking System. All rights reserved.
+            </footer>
+        </div>
     </div>
 </div>

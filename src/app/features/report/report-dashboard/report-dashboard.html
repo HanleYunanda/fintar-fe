@@ -1,0 +1,62 @@
+<div class="space-y-6">
+    <h1 class="text-2xl font-bold text-gray-800">Loan Report Dashboard</h1>
+
+    <div *ngIf="loading()" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <p-skeleton height="400px"></p-skeleton>
+        <p-skeleton height="400px"></p-skeleton>
+    </div>
+
+    <!-- KPIs -->
+    <div *ngIf="!loading() && kpis() as k" class="grid grid-cols-1 md:grid-cols-4 gap-6 fadein animation-duration-500">
+        <p-card styleClass="bg-blue-50 border-blue-200 border text-center h-full">
+            <div class="text-blue-600 font-bold mb-2">Total Applications (Month)</div>
+            <div class="text-3xl font-bold text-gray-800">{{ k.totalApplications }}</div>
+            <div class="text-sm text-green-600 mt-2 font-semibold"><i class="pi pi-arrow-up"></i> {{
+                k.totalApplicationsGrowth}}% vs last month
+            </div>
+        </p-card>
+        <p-card styleClass="bg-green-50 border-green-200 border text-center h-full">
+            <div class="text-green-600 font-bold mb-2">Total Outstanding (Month)</div>
+            <div class="text-3xl font-bold text-gray-800">{{ k.totalOutstanding | currency:'IDR':'symbol':'1.0-0' }}
+            </div>
+            <div class="text-sm text-green-600 mt-2 font-semibold"><i class="pi pi-arrow-up"></i>
+                {{k.totalOutstandingGrowth}}% vs last month</div>
+        </p-card>
+        <p-card styleClass="bg-orange-50 border-orange-200 border text-center h-full">
+            <div class="text-orange-600 font-bold mb-2">Active Loans</div>
+            <div class="text-3xl font-bold text-gray-800">{{ k.activeLoans }}</div>
+        </p-card>
+        <p-card styleClass="bg-purple-50 border-purple-200 border text-center h-full">
+            <div class="text-purple-600 font-bold mb-2">Approval Rate</div>
+            <div class="text-3xl font-bold text-gray-800">{{ k.approvalRate }}%</div>
+        </p-card>
+    </div>
+
+    <!-- Charts Section -->
+    <div *ngIf="!loading()" class="space-y-6 fadein animation-duration-500">
+
+        <!-- Row 1: Disbursement Trends (Full Width) -->
+        <p-card header="Disbursement Trends (Last 6 Months)" styleClass="h-full">
+            <div class="h-[300px]">
+                <p-chart type="bar" [data]="barData" [options]="barOptions" height="300px"></p-chart>
+            </div>
+        </p-card>
+
+        <!-- Row 2: Status & Products -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Loan Status Distribution -->
+            <p-card header="Loan Applications by Status" styleClass="h-full">
+                <div class="flex justify-center h-[300px]">
+                    <p-chart type="pie" [data]="pieData" [options]="pieOptions" height="300px"></p-chart>
+                </div>
+            </p-card>
+
+            <!-- Best Selling Product -->
+            <p-card header="Best Selling Products" styleClass="h-full">
+                <div class="h-[300px]">
+                    <p-chart type="bar" [data]="productData" [options]="productOptions" height="300px"></p-chart>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>

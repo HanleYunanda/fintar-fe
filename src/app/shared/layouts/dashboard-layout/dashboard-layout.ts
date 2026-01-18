@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, signal, inject, HostListener } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // PrimeNG
@@ -38,6 +38,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class DashboardLayout {
     private authService = inject(AuthService);
+    private router = inject(Router);
 
     isSidebarVisible = signal<boolean>(window.innerWidth >= 768);
 
@@ -47,8 +48,7 @@ export class DashboardLayout {
         this.isSidebarVisible.set(shouldShow);
     }
 
-    // User Info Mock
-    user = this.authService.getUser() || { id: '', username: 'User', email: '', roles: ['Staff'], permissions: [], token: '' };
+    user = this.authService.getUser() || { id: '', username: 'User', email: '', roles: [], permissions: [], token: '' };
 
     items: MenuItem[] = [
         {
@@ -70,9 +70,8 @@ export class DashboardLayout {
         {
             label: 'Loan Management',
             items: [
-                { label: 'Loan Plafond', icon: 'pi pi-fw pi-dollar', routerLink: '/dashboard/loan-plafond' },
-                { label: 'Applications', icon: 'pi pi-fw pi-file', routerLink: '/dashboard/applications' },
-                { label: 'Documents', icon: 'pi pi-fw pi-folder', routerLink: '/dashboard/documents' }
+                { label: 'Loan Application', icon: 'pi pi-fw pi-dollar', routerLink: '/loan' },
+                { label: 'Report', icon: 'pi pi-fw pi-file', routerLink: '/loan/report' },
             ]
         },
     ];
@@ -81,10 +80,12 @@ export class DashboardLayout {
         {
             label: 'Profile',
             icon: 'pi pi-user',
-            command: () => {
-                // Navigate to profile - for now just log
-                console.log('Navigate to profile');
-            }
+            command: () => this.router.navigate(['/profile'])
+        },
+        {
+            label: 'Change Password',
+            icon: 'pi pi-key',
+            command: () => this.router.navigate(['/change-password'])
         },
         {
             label: 'Logout',

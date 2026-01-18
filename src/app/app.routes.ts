@@ -25,6 +25,10 @@ export const routes: Routes = [
         canActivate: [authGuard],
         children: [
             {
+                path: 'dashboard',
+                loadComponent: () => import('./features/dashboard/home-dashboard/home-dashboard').then(m => m.HomeDashboardComponent)
+            },
+            {
                 path: 'user',
                 component: UserComponent
             },
@@ -45,8 +49,33 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/product/product').then(m => m.ProductComponent)
             },
             {
+                path: 'loan',
+                children: [
+                    {
+                        path: '',
+                        loadComponent: () => import('./features/loan/loan-list/loan-list').then(m => m.LoanListComponent)
+                    },
+                    {
+                        path: 'report',
+                        loadComponent: () => import('./features/report/report-dashboard/report-dashboard').then(m => m.ReportDashboardComponent)
+                    },
+                    {
+                        path: ':id',
+                        loadComponent: () => import('./features/loan/loan-detail/loan-detail').then(m => m.LoanDetailComponent)
+                    },
+                ]
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('./features/user/profile/profile').then(m => m.ProfileComponent)
+            },
+            {
+                path: 'change-password',
+                loadComponent: () => import('./features/user/change-password/change-password').then(m => m.ChangePasswordComponent)
+            },
+            {
                 path: '',
-                redirectTo: 'user',
+                redirectTo: 'dashboard',
                 pathMatch: 'full'
             }
         ]

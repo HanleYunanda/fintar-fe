@@ -140,19 +140,14 @@
             </div>
 
             <!-- Password -->
+            @if (dialogMode() === 'create') {
             <div class="flex flex-col gap-2">
-                <label for="password" class="font-semibold">
-                    Password
-                    @if (dialogMode() === 'create') {
-                    <span class="text-red-500">*</span>
-                    } @else {
-                    <span class="text-gray-500 text-sm">(leave blank to keep current)</span>
-                    }
-                </label>
+                <label for="password" class="font-semibold">Password <span class="text-red-500">*</span></label>
                 <input pInputText id="password" type="password" [value]="userForm().password"
                     (input)="updateFormField('password', $any($event.target).value)" placeholder="Enter password"
                     class="w-full" />
             </div>
+            }
 
             <!-- Roles -->
             <div class="flex flex-col gap-2">
