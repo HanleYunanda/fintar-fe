@@ -132,7 +132,8 @@ export class ReportDashboardComponent implements OnInit {
         // Use forkJoin if real, but here we can just subscribe separately or chain
         // Since it's dummy synchronous-like
 
-        this.reportService.getLoanStatusStats().subscribe(stats => {
+        this.reportService.getLoanStatusStats().subscribe(response => {
+            let stats = response.data;
             this.pieData = {
                 labels: stats.map(s => s.status),
                 datasets: [
@@ -173,9 +174,11 @@ export class ReportDashboardComponent implements OnInit {
             };
         });
 
-        this.reportService.getBestSellingProducts().subscribe(stats => {
+        this.reportService.getBestSellingProducts().subscribe(response => {
+            let stats = response.data;
+            console.log(stats);
             this.productData = {
-                labels: stats.map(s => s.product),
+                labels: stats.map(s => s.productName),
                 datasets: [
                     {
                         label: 'Applications',

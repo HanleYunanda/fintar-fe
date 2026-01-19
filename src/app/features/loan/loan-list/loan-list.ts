@@ -78,7 +78,14 @@ export class LoanListComponent implements OnInit {
         const endDate = this.filterEndDate();
 
         if (loanId) {
-            result = result.filter(l => l.id.toLowerCase().includes(loanId));
+            result = result.filter(l =>
+                l.id.toLowerCase().includes(loanId) ||
+                l.product?.plafond?.name?.toLowerCase().includes(loanId) ||
+                l.status.toLowerCase().includes(loanId) ||
+                l.principalDebt.toString().includes(loanId) ||
+                l.outstandingDebt.toString().includes(loanId) ||
+                l.tenor.toString().includes(loanId)
+            );
         }
         if (status) {
             result = result.filter(l => l.status === status);

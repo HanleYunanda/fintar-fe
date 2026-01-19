@@ -1,0 +1,53 @@
+<div class="card p-6">
+    <p-toast></p-toast>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold m-0 text-slate-800">Customer List</h2>
+    </div>
+
+    <p-table #dt [value]="customers()" [loading]="loading()" [paginator]="true" [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 20]" [globalFilterFields]="['fullName', 'nationalId', 'email']"
+        [tableStyle]="{ 'min-width': '60rem' }" class="p-datatable-sm">
+
+        <ng-template pTemplate="caption">
+            <div class="flex justify-between items-center">
+                <span class="p-input-icon-left w-full md:w-auto">
+                    <i class="pi pi-search me-3"></i>
+                    <input pInputText type="text" placeholder="Search customers..." class="w-full md:w-80"
+                        (input)="dt.filterGlobal($any($event.target).value, 'contains')" />
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="fullName">Full Name <p-sortIcon field="fullName"></p-sortIcon></th>
+                <th pSortableColumn="nationalId">National ID <p-sortIcon field="nationalId"></p-sortIcon></th>
+                <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+                <th pSortableColumn="phoneNumber">Phone <p-sortIcon field="phoneNumber"></p-sortIcon></th>
+                <th style="width: 8rem">Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-customer>
+            <tr>
+                <td class="font-medium">{{ customer.fullName }}</td>
+                <td>{{ customer.nationalId }}</td>
+                <td>{{ customer.user?.email }}</td>
+                <td>{{ customer.phoneNumber }}</td>
+                <td>
+                    <p-button icon="pi pi-eye" [text]="true" severity="info" (click)="viewDetail(customer.id)"
+                        pTooltip="View Detail" tooltipPosition="top"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5" class="text-center py-8 text-slate-500">
+                    <i class="pi pi-users text-4xl mb-3 block opacity-20"></i>
+                    No customers found.
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

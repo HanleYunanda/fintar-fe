@@ -32,11 +32,11 @@
                 <div class="mb-6">
                     <p-floatLabel>
                         <p-password id="password" formControlName="password" [feedback]="false" [toggleMask]="true"
-                            styleClass="w-full" inputStyleClass="w-full"></p-password>
+                            class="w-full" inputStyleClass="w-full" aria-describedby="password-help"></p-password>
                         <label for="password">Password</label>
                     </p-floatLabel>
                     @if (loginForm.controls.password.touched && loginForm.controls.password.getError('required')) {
-                    <small class="p-error block mt-1 text-red-500">Password is required.</small>
+                    <small id="password-help" class="p-error block mt-1 text-red-500">Password is required.</small>
                     }
                 </div>
 
@@ -48,8 +48,6 @@
                     <div class="text-center text-sm text-slate-500">
                         <a routerLink="/auth/forgot-password" class="hover:text-primary-600 transition-colors">Forgot
                             Password?</a>
-                        <span class="mx-2">•</span>
-                        <a routerLink="/auth/register" class="hover:text-primary-600 transition-colors">Register</a>
                     </div>
                 </div>
             </form>

@@ -34,7 +34,7 @@
     <!-- Hero / Carousel -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <p-carousel [value]="carouselItems" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="5000"
-            indicatorStyleClass="p-carousel-indicators-green">
+            indicatorclass="p-carousel-indicators-green">
             <ng-template let-item pTemplate="item">
                 <div class="relative overflow-hidden rounded-3xl h-[400px] md:h-[500px] shadow-2xl">
                     <img [src]="item.image" [alt]="item.title"
@@ -113,7 +113,7 @@
                             <span class="font-bold">{{ p.maxTenor }} Bulan</span>
                         </div>
                     </div>
-                    <p-button label="Pilih" [outlined]="true" severity="success" styleClass="w-full"></p-button>
+                    <p-button label="Pilih" [outlined]="true" severity="success" class="w-full"></p-button>
                 </div>
                 }
             </div>

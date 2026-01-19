@@ -24,44 +24,25 @@ export class ReportService {
     private http = inject(HttpClient);
     private readonly API_URL = `${environment.apiUrl}/loan/report`;
 
-    getLoanStatusStats(): Observable<LoanStatusStat[]> {
-        // Dummy data
-        const data: LoanStatusStat[] = [
-            { status: LoanStatus.CREATED, count: 15 },
-            { status: LoanStatus.REVIEWED, count: 8 },
-            { status: LoanStatus.APPROVED, count: 12 },
-            { status: LoanStatus.REJECTED, count: 5 },
-            { status: LoanStatus.DISBURSED, count: 20 }
-        ];
-        return of(data);
+    getLoanStatusStats(): Observable<ApiResponse<LoanStatusStat[]>> {
+        return this.http.get<ApiResponse<LoanStatusStat[]>>(this.API_URL + '/applications-by-status');
     }
 
     getDisbursementStats(): Observable<ApiResponse<DisbursementStat[]>> {
         return this.http.get<ApiResponse<DisbursementStat[]>>(this.API_URL + '/disbursement-trends');
     }
 
-    getBestSellingProducts(): Observable<ProductStat[]> {
-        const data: ProductStat[] = [
-            { product: 'IRON 3', count: 45 },
-            { product: 'BRONZE 3', count: 28 },
-            { product: 'BRONZE 6', count: 15 },
-        ];
-        return of(data);
+    getBestSellingProducts(): Observable<ApiResponse<ProductStat[]>> {
+        return this.http.get<ApiResponse<ProductStat[]>>(this.API_URL + '/best-selling-products');
     }
 
     getMonthKPIs(): Observable<ApiResponse<MonthKPI>> {
-        // return of({
-        //     totalApplications: 125,
-        //     totalOutstanding: 4500000000,
-        //     activeLoans: 85,
-        //     approvalRate: 75.5 // percent
-        // });
         return this.http.get<ApiResponse<MonthKPI>>(this.API_URL + '/dashboard-summary');
     }
 }
 
 export interface ProductStat {
-    product: string;
+    productName: string;
     count: number;
 }
 

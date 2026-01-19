@@ -11,7 +11,7 @@
             </div>
         </ng-template>
 
-        <p-table [value]="roles()" [loading]="loading()" [paginator]="true" [rows]="10"
+        <p-table #dt [value]="roles()" [loading]="loading()" [paginator]="true" [rows]="10"
             [rowsPerPageOptions]="[5, 10, 20]" [globalFilterFields]="['name']" class="p-datatable-sm"
             [tableStyle]="{ 'min-width': '50rem' }">
 
@@ -19,7 +19,8 @@
                 <div class="flex justify-between items-center">
                     <span class="p-input-icon-left w-full md:w-auto">
                         <i class="pi pi-search me-3"></i>
-                        <input pInputText type="text" placeholder="Search roles..." class="w-full md:w-80" />
+                        <input pInputText type="text" placeholder="Search roles..." class="w-full md:w-80"
+                            (input)="dt.filterGlobal($any($event.target).value, 'contains')" />
                     </span>
                 </div>
             </ng-template>

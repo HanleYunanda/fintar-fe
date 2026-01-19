@@ -1,0 +1,228 @@
+<div class="customer-detail-container p-6">
+    <p-toast></p-toast>
+
+    <!-- Header Section -->
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-4">
+            <p-button icon="pi pi-arrow-left" [text]="true" (click)="goBack()" severity="secondary"></p-button>
+            <h1 class="text-2xl font-bold text-slate-800 m-0">Customer Profile</h1>
+        </div>
+    </div>
+
+    @if (loading()) {
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <p-skeleton width="100%" height="200px"></p-skeleton>
+        <p-skeleton width="100%" height="200px" class="md:col-span-2"></p-skeleton>
+    </div>
+    } @else if (customer()) {
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Summary Card -->
+        <div class="flex flex-col gap-6">
+            <p-card styleClass="overflow-hidden">
+                <div class="flex flex-col items-center text-center p-4">
+                    <div
+                        class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-4 text-blue-600 text-4xl">
+                        <i class="pi pi-user"></i>
+                    </div>
+                    <h2 class="text-xl font-bold m-0 text-slate-800">{{ customer()?.fullName }}</h2>
+                    <p class="text-slate-500 m-0 mt-1">{{ customer()?.user?.email }}</p>
+                    <div class="flex gap-2 mt-4">
+                        <p-tag [value]="customer()?.nationalId" severity="info"></p-tag>
+                        <p-tag [value]="customer()?.plafond?.name" severity="warn" icon="pi pi-crown"></p-tag>
+                    </div>
+                </div>
+                <p-divider></p-divider>
+                <div class="p-4 space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Gender</span>
+                        <span class="font-medium text-slate-800">{{ customer()?.isMale ? 'Male' : 'Female' }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Phone</span>
+                        <span class="font-medium text-slate-800">{{ customer()?.phoneNumber }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Account Number</span>
+                        <span class="font-mono font-medium text-slate-800">{{ customer()?.accountNumber }}</span>
+                    </div>
+                </div>
+            </p-card>
+
+            <!-- Quick Stats -->
+            <p-card header="Financial Summary">
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-50 rounded-lg">
+                        <span class="text-xs font-semibold text-slate-500 uppercase block mb-1">Monthly Salary</span>
+                        <span class="text-xl font-bold text-blue-600">
+                            {{ (customer()?.salary || 0) | currency:'IDR':'symbol':'1.0-0' }}
+                        </span>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-lg">
+                        <span class="text-xs font-semibold text-slate-500 uppercase block mb-1">Remaining Plafond</span>
+                        <span class="text-xl font-bold text-green-600">
+                            {{ (customer()?.remainPlafond || 0) | currency:'IDR':'symbol':'1.0-0' }}
+                        </span>
+                        <small class="block text-slate-400 mt-1">Total Max: {{ (customer()?.plafond?.maxAmount || 0) |
+                            currency:'IDR':'symbol':'1.0-0' }}</small>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+
+        <!-- Right Column: Detail Tabs -->
+        <div class="lg:col-span-2">
+            <p-card>
+                <p-tabs [value]="0">
+                    <p-tablist>
+                        <p-tab [value]="0">Personal Info</p-tab>
+                        <p-tab [value]="1">Employment</p-tab>
+                        <p-tab [value]="2">Documents</p-tab>
+                        <p-tab [value]="3">Loan History</p-tab>
+                    </p-tablist>
+                    <p-tabpanels>
+                        <!-- Personal Info -->
+                        <p-tabpanel [value]="0">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 py-4">
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">Full Name</label>
+                                    <span class="font-medium text-slate-800 text-lg">{{ customer()?.fullName }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">National ID (KTP)</label>
+                                    <span class="font-medium text-slate-800 text-lg">{{ customer()?.nationalId }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">Gender</label>
+                                    <span class="font-medium text-slate-800">{{ customer()?.isMale ? 'Male' : 'Female'
+                                        }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">Birth Place & Date</label>
+                                    <span class="font-medium text-slate-800">{{ customer()?.placeOfBirth }}, {{
+                                        customer()?.dateOfBirth | date:'dd MMM yyyy' }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">Religion</label>
+                                    <span class="font-medium text-slate-800">{{ customer()?.religion }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">Citizenship</label>
+                                    <span class="font-medium text-slate-800">{{ customer()?.citizenship }}</span>
+                                </div>
+                                <div class="detail-item md:col-span-2">
+                                    <label class="text-sm text-slate-500 block mb-1">Address</label>
+                                    <span class="font-medium text-slate-800">{{ customer()?.address }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">Zip Code</label>
+                                    <span class="font-medium text-slate-800">{{ customer()?.zipCode }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">House Status</label>
+                                    <p-tag [value]="customer()?.houseStatus" severity="secondary"></p-tag>
+                                </div>
+                            </div>
+                        </p-tabpanel>
+
+                        <!-- Employment -->
+                        <p-tabpanel [value]="1">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 py-4">
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">Occupation</label>
+                                    <span class="font-medium text-slate-800 text-lg">{{ customer()?.job }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">Workplace</label>
+                                    <span class="font-medium text-slate-800 text-lg">{{ customer()?.workplace }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label class="text-sm text-slate-500 block mb-1">Monthly Salary</label>
+                                    <span class="font-bold text-green-600 text-lg">
+                                        {{ customer()?.salary | currency:'IDR':'symbol':'1.0-0' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </p-tabpanel>
+
+                        <!-- Documents -->
+                        <p-tabpanel [value]="2">
+                            <div class="py-4">
+                                @if (documents().length === 0) {
+                                <div class="text-center py-8 text-slate-400 italic">No documents available.</div>
+                                } @else {
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    @for (doc of documents(); track doc.id) {
+                                    <div
+                                        class="border border-slate-200 rounded-lg p-3 hover:bg-slate-50 transition-colors">
+                                        <div class="flex items-start gap-3">
+                                            <div
+                                                class="w-10 h-10 bg-slate-100 rounded flex items-center justify-center text-slate-500">
+                                                <i class="pi pi-file"></i>
+                                            </div>
+                                            <div class="flex-1 overflow-hidden">
+                                                <div class="font-medium text-slate-800 truncate">{{ doc.filename }}
+                                                </div>
+                                                <div class="text-xs text-slate-500">{{ doc.docType }} • {{ doc.size ?
+                                                    (doc.size / 1024 | number:'1.0-2') + ' KB' : 'Size unknown' }}</div>
+                                            </div>
+                                        </div>
+                                        <p-divider styleClass="my-3"></p-divider>
+                                        <div class="flex justify-end">
+                                            <p-image [src]="baseUri + '/view/' + doc.id" [alt]="doc.filename" width="80"
+                                                [preview]="true">
+                                            </p-image>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                                }
+                            </div>
+                        </p-tabpanel>
+
+                        <!-- Loan History -->
+                        <p-tabpanel [value]="3">
+                            <div class="py-4">
+                                <p-table [value]="loans()" [rows]="5" [paginator]="true"
+                                    [tableStyle]="{ 'min-width': '100%' }" class="p-datatable-sm">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Product</th>
+                                            <th class="text-right">Amount</th>
+                                            <th class="text-center">Status</th>
+                                            <th style="width: 3rem"></th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-loan>
+                                        <tr>
+                                            <td>{{ loan.createdAt | date:'dd/MM/yy' }}</td>
+                                            <td>{{ loan.product?.plafond?.name }}</td>
+                                            <td class="text-right font-medium text-slate-700">
+                                                {{ loan.principalDebt | currency:'IDR':'symbol':'1.0-0' }}
+                                            </td>
+                                            <td class="text-center">
+                                                <p-tag [value]="loan.status"
+                                                    [severity]="getSeverity(loan.status)"></p-tag>
+                                            </td>
+                                            <td>
+                                                <p-button icon="pi pi-chevron-right" [text]="true"
+                                                    (click)="viewLoan(loan.id)"></p-button>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="5" class="text-center py-8 text-slate-500">No loan history.
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </p-tabpanel>
+                    </p-tabpanels>
+                </p-tabs>
+            </p-card>
+        </div>
+    </div>
+    }
+</div>

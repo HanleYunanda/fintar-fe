@@ -55,4 +55,13 @@ export class AuthService {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem('user');
     }
+
+    hasPermission(permission: string): boolean {
+        const user = this.getUser();
+        return user?.permissions?.includes(permission) ?? false;
+    }
+
+    forgotPassword(email: string): Observable<ApiResponse<any>> {
+        return this.http.post<ApiResponse<any>>(`${this.API_URL}/forgot-password`, { email });
+    }
 }

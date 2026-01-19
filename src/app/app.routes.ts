@@ -20,6 +20,10 @@ export const routes: Routes = [
         component: Login
     },
     {
+        path: 'auth/forgot-password',
+        loadComponent: () => import('./features/auth/forgot-password/forgot-password').then(m => m.ForgotPasswordComponent)
+    },
+    {
         path: '',
         component: DashboardLayout,
         canActivate: [authGuard],
@@ -47,6 +51,16 @@ export const routes: Routes = [
             {
                 path: 'product',
                 loadComponent: () => import('./features/product/product').then(m => m.ProductComponent)
+            },
+            {
+                path: 'customer',
+                loadComponent: () => import('./features/customer/customer-list/customer-list').then(m => m.CustomerListComponent),
+                data: { permission: 'READ_USER' } // Assuming it uses READ_USER or similar
+            },
+            {
+                path: 'customer/:id',
+                loadComponent: () => import('./features/customer/customer-detail/customer-detail').then(m => m.CustomerDetailComponent),
+                data: { permission: 'READ_USER' }
             },
             {
                 path: 'loan',

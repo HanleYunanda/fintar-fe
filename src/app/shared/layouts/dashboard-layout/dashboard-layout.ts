@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, HostListener, computed } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -50,7 +50,8 @@ export class DashboardLayout {
 
     user = this.authService.getUser() || { id: '', username: 'User', email: '', roles: [], permissions: [], token: '' };
 
-    items: MenuItem[] = [
+    // Define all menu items with their required permissions
+    private allMenuItems: MenuItem[] = [
         {
             label: 'Home',
             items: [
@@ -60,21 +61,39 @@ export class DashboardLayout {
         {
             label: 'Master',
             items: [
-                { label: 'User', icon: 'pi pi-fw pi-user', routerLink: '/user' },
-                { label: 'Role', icon: 'pi pi-fw pi-users', routerLink: '/role' },
-                { label: 'Permission', icon: 'pi pi-fw pi-key', routerLink: '/permission' },
-                { label: 'Plafond', icon: 'pi pi-fw pi-crown', routerLink: '/plafond' },
-                { label: 'Product', icon: 'pi pi-fw pi-credit-card', routerLink: '/product' }
+                { label: 'User', icon: 'pi pi-fw pi-user', routerLink: '/user', data: { permission: 'READ_USER' } },
+                { label: 'Role', icon: 'pi pi-fw pi-users', routerLink: '/role', data: { permission: 'READ_ROLE' } },
+                { label: 'Permission', icon: 'pi pi-fw pi-key', routerLink: '/permission', data: { permission: 'READ_PERMISSION' } },
+                { label: 'Plafond', icon: 'pi pi-fw pi-crown', routerLink: '/plafond', data: { permission: 'READ_PLAFOND' } },
+                { label: 'Product', icon: 'pi pi-fw pi-credit-card', routerLink: '/product', data: { permission: 'READ_PRODUCT' } },
+                { label: 'Customer', icon: 'pi pi-fw pi-users', routerLink: '/customer', data: { permission: 'READ_USER' } }
             ]
         },
         {
             label: 'Loan Management',
             items: [
-                { label: 'Loan Application', icon: 'pi pi-fw pi-dollar', routerLink: '/loan' },
-                { label: 'Report', icon: 'pi pi-fw pi-file', routerLink: '/loan/report' },
+                { label: 'Loan Application', icon: 'pi pi-fw pi-dollar', routerLink: '/loan', data: { permission: 'READ_LOAN' } },
+                { label: 'Report', icon: 'pi pi-fw pi-file', routerLink: '/loan/report', data: { permission: 'READ_REPORT' } },
             ]
         },
     ];
+
+    // Computed signal to filter menu items based on permissions
+    items = computed(() => {
+        return this.allMenuItems.map(section => ({
+            ...section,
+            items: section.items?.filter(item => {
+                // If no permission required, always show
+                if (!item['data']?.['permission']) {
+                    console.log("SHOW");
+                    return true;
+                }
+                // Check if user has the required permission
+                console.log("HIDE");
+                return this.authService.hasPermission(item['data']['permission']);
+            })
+        })).filter(section => section.items && section.items.length > 0); // Remove empty sections
+    });
 
     userMenuItems: MenuItem[] = [
         {
