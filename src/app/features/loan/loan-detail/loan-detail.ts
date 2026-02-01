@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 // PrimeNG
 import { CardModule } from 'primeng/card';
@@ -54,6 +55,7 @@ export class LoanDetailComponent implements OnInit {
     private loanService = inject(LoanService);
     private messageService = inject(MessageService);
     private confirmationService = inject(ConfirmationService);
+    private sanitizer = inject(DomSanitizer);
 
     loanId = signal<string>('');
     loan = signal<LoanApplication | null>(null);
@@ -159,6 +161,11 @@ export class LoanDetailComponent implements OnInit {
 
     goBack(): void {
         window.history.back();
+    }
+
+    getGoogleMapsUrl(latitude: number, longitude: number): SafeResourceUrl {
+        const url = `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${latitude},${longitude}&zoom=15`;
+        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
 
     // Actions

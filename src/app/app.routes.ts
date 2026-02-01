@@ -8,6 +8,7 @@ import { PermissionComponent } from './features/permission/permission';
 import { PageNotFound } from './features/error/page-not-found/page-not-found';
 import { PlafondComponent } from './features/plafond/plafond';
 import { authGuard } from './core/guards/auth.guard';
+import { permissionGuard } from './core/guards/permission.guard';
 
 export const routes: Routes = [
     {
@@ -24,6 +25,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/auth/forgot-password/forgot-password').then(m => m.ForgotPasswordComponent)
     },
     {
+        path: 'unauthorized',
+        loadComponent: () => import('./features/error/unauthorized/unauthorized').then(m => m.UnauthorizedComponent)
+    },
+    {
         path: '',
         component: DashboardLayout,
         canActivate: [authGuard],
@@ -34,15 +39,21 @@ export const routes: Routes = [
             },
             {
                 path: 'user',
-                component: UserComponent
+                component: UserComponent,
+                canActivate: [permissionGuard],
+                data: { permission: 'READ_USER' }
             },
             {
                 path: 'role',
-                loadComponent: () => import('./features/role/role').then(m => m.RoleComponent)
+                loadComponent: () => import('./features/role/role').then(m => m.RoleComponent),
+                canActivate: [permissionGuard],
+                data: { permission: 'READ_ROLE' }
             },
             {
                 path: 'permission',
-                loadComponent: () => import('./features/permission/permission').then(m => m.PermissionComponent)
+                loadComponent: () => import('./features/permission/permission').then(m => m.PermissionComponent),
+                canActivate: [permissionGuard],
+                data: { permission: 'READ_PERMISSION' }
             },
             {
                 path: 'plafond',
@@ -55,12 +66,14 @@ export const routes: Routes = [
             {
                 path: 'customer',
                 loadComponent: () => import('./features/customer/customer-list/customer-list').then(m => m.CustomerListComponent),
-                data: { permission: 'READ_USER' } // Assuming it uses READ_USER or similar
+                canActivate: [permissionGuard],
+                data: { permission: 'READ_CUSTOMER_DETAIL' }
             },
             {
                 path: 'customer/:id',
                 loadComponent: () => import('./features/customer/customer-detail/customer-detail').then(m => m.CustomerDetailComponent),
-                data: { permission: 'READ_USER' }
+                canActivate: [permissionGuard],
+                data: { permission: 'READ_CUSTOMER_DETAIL' }
             },
             {
                 path: 'loan',
@@ -71,7 +84,9 @@ export const routes: Routes = [
                     },
                     {
                         path: 'report',
-                        loadComponent: () => import('./features/report/report-dashboard/report-dashboard').then(m => m.ReportDashboardComponent)
+                        loadComponent: () => import('./features/report/report-dashboard/report-dashboard').then(m => m.ReportDashboardComponent),
+                        canActivate: [permissionGuard],
+                        data: { permission: 'READ_REPORT' }
                     },
                     {
                         path: ':id',

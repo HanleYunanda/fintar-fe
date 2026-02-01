@@ -30,6 +30,8 @@ export interface LoanApplication {
     product: Product;
     loanStatusHistories: LoanStatusHistory[];
     createdAt: Date;
+    latitude?: number;
+    longitude?: number;
 }
 
 export interface CreateLoanRequest {

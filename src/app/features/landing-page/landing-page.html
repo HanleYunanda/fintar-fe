@@ -31,25 +31,62 @@
         </div>
     </nav>
 
-    <!-- Hero / Carousel -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Hero Section -->
+    <section class="relative bg-emerald-950 overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 bg-[url('/office-calc.webp')] bg-cover bg-center opacity-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-emerald-900/90 via-emerald-900/80 to-emerald-950"></div>
+
+        <!-- Animated Shapes -->
+        <div
+            class="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-pulse">
+        </div>
+        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-72 h-72 bg-teal-500/20 rounded-full blur-3xl animate-pulse"
+            style="animation-delay: 1s;"></div>
+
+        <div
+            class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 flex flex-col items-center text-center">
+            <!-- <div
+                class="w-24 h-24 bg-emerald-500/10 backdrop-blur-md rounded-3xl flex items-center justify-center mb-8 border border-emerald-400/20 shadow-2xl shadow-emerald-500/20 hover:scale-105 transition-transform duration-500">
+                <i class="pi pi-bolt text-5xl text-emerald-400"></i>
+            </div> -->
+            <!-- <p-avatar image="/logo-fintar.png" size="xlarge" shape="circle" /> -->
+            <p-image src="/logo-fintar.png" alt="logo" width="100" />
+
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-200 to-teal-400">FINTAR</span>
+            </h1>
+
+            <p class="text-xl md:text-3xl text-emerald-100 font-light max-w-2xl mb-12 leading-relaxed">
+                Solusi Financing Pintar Anda
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <p-button label="Download Sekarang" icon="pi pi-android" severity="success" [raised]="true" size="large"
+                    [rounded]="true"
+                    styleClass="px-8 py-4 font-bold text-lg shadow-lg hover:shadow-emerald-500/30 transition-all"></p-button>
+                <p-button label="Pelajari Lebih Lanjut" icon="pi pi-arrow-right" [text]="true" severity="info"
+                    size="large" [rounded]="true"
+                    styleClass="px-8 py-4 text-emerald-300 hover:text-emerald-200 hover:bg-emerald-500/10"></p-button>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <p-carousel [value]="carouselItems" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="5000"
             indicatorclass="p-carousel-indicators-green">
             <ng-template let-item pTemplate="item">
-                <div class="relative overflow-hidden rounded-3xl h-[400px] md:h-[500px] shadow-2xl">
+                <div
+                    class="relative overflow-hidden rounded-3xl h-[300px] md:h-[400px] shadow-lg group hover:shadow-2xl transition-all duration-300">
                     <img [src]="item.image" [alt]="item.title"
-                        class="absolute inset-0 w-full h-full object-cover brightness-50" />
+                        class="absolute inset-0 w-full h-full object-cover brightness-[0.6] group-hover:scale-105 transition-transform duration-700" />
                     <div class="absolute inset-0 flex flex-col justify-center px-8 md:px-16 max-w-2xl">
-                        <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                        <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight shadow-sm">
                             {{ item.title }}
-                        </h1>
-                        <p class="text-lg md:text-xl text-emerald-50 mb-8 font-light">
+                        </h2>
+                        <p class="text-lg text-emerald-50 mb-6 font-light max-w-lg shadow-sm">
                             {{ item.description }}
                         </p>
-                        <div class="flex gap-4">
-                            <p-button label="Download APK" icon="pi pi-android" severity="success" [raised]="true"
-                                size="large"></p-button>
-                        </div>
                     </div>
                 </div>
             </ng-template>
@@ -84,6 +121,54 @@
         </div>
     </section>
 
+    <!-- Loan Application Flow Section -->
+    <section id="how-it-works" class="py-24 bg-slate-50 relative overflow-hidden">
+        <!-- Decorative bg -->
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20">
+                <span class="text-emerald-600 font-bold tracking-wider text-sm uppercase mb-2 block">Proses Mudah</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Alur Pengajuan Pinjaman</h2>
+                <div class="w-20 h-1.5 bg-emerald-500 mx-auto rounded-full mb-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto text-lg">Hanya butuh 4 langkah mudah untuk mendapatkan dana
+                    yang Anda butuhkan.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+                <!-- Connecting Line (Desktop) -->
+                <div
+                    class="hidden lg:block absolute top-14 left-[12%] right-[12%] h-0.5 border-t-2 border-dashed border-gray-200 -z-10">
+                </div>
+
+                @for (step of loanSteps; track $index) {
+                <div
+                    class="group relative bg-white p-8 rounded-3xl shadow-sm border border-gray-100/50 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                    <div
+                        class="w-20 h-20 mx-auto bg-white rounded-2xl flex items-center justify-center mb-8 relative z-10 shadow-lg group-hover:scale-110 transition-transform duration-300 ring-1 ring-gray-100">
+                        <div
+                            class="absolute inset-0 bg-emerald-50 rounded-2xl transform rotate-6 group-hover:rotate-12 transition-transform duration-300 -z-10">
+                        </div>
+                        <i [class]="step.icon + ' text-3xl text-emerald-600'"></i>
+
+                        <!-- Step Number Badge -->
+                        <div
+                            class="absolute -top-3 -right-3 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md border-2 border-white">
+                            {{$index + 1}}
+                        </div>
+                    </div>
+
+                    <h3
+                        class="text-xl font-bold text-gray-900 mb-4 text-center group-hover:text-emerald-700 transition-colors">
+                        {{step.title}}</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed text-center">{{step.description}}</p>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
     <!-- Plafonds Section -->
     <section id="plafonds" class="py-20 bg-emerald-950 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,8 +177,8 @@
                     <h2 class="text-3xl md:text-4xl font-bold mb-4">Temukan Limit yang Pas</h2>
                     <p class="text-emerald-200 text-lg">Berbagai pilihan plafond sesuai kebutuhan financial Anda.</p>
                 </div>
-                <p-button label="Lihat Produk" icon="pi pi-arrow-right" [text]="true" severity="success"
-                    class="[&_.p-button]:text-emerald-400"></p-button>
+                <!-- <p-button label="Lihat Produk" icon="pi pi-arrow-right" [text]="true" severity="success"
+                    class="[&_.p-button]:text-emerald-400"></p-button> -->
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @for (p of plafonds(); track p.id) {
@@ -113,10 +198,80 @@
                             <span class="font-bold">{{ p.maxTenor }} Bulan</span>
                         </div>
                     </div>
-                    <p-button label="Pilih" [outlined]="true" severity="success" class="w-full"></p-button>
+                    <p-button label="Lihat Produk" [outlined]="true" severity="success" class="w-full"
+                        (click)="onSelectPlafond(p)"></p-button>
                 </div>
                 }
             </div>
+
+            <!-- Products for Selected Plafond -->
+            @if (selectedPlafond()) {
+            <div id="selected-products" class="mt-16 pt-16 border-t border-emerald-800/30 scroll-mt-24">
+                <div class="text-center mb-12">
+                    <span
+                        class="inline-block py-1 px-3 rounded-full bg-emerald-500/10 text-emerald-300 text-xs font-bold tracking-widest uppercase mb-4 border border-emerald-500/20">Pilihan
+                        Produk</span>
+                    <h3 class="text-3xl md:text-5xl font-bold text-white mb-4">
+                        Produk untuk <span class="text-emerald-400">{{ selectedPlafond()?.name }}</span>
+                    </h3>
+                    <p class="text-emerald-100/80 text-lg max-w-2xl mx-auto font-light">
+                        Pilih skema cicilan yang paling sesuai dengan kemampuan finansial Anda.
+                    </p>
+                </div>
+
+                @if (filteredProducts().length > 0) {
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+                    @for (product of filteredProducts(); track product.id) {
+                    <div
+                        class="relative group bg-gradient-to-br from-emerald-900/90 to-emerald-950/90 rounded-[2rem] p-8 border border-emerald-500/30 hover:border-emerald-400 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_40px_-10px_rgba(52,211,153,0.3)] overflow-hidden">
+
+                        <!-- Decoration -->
+                        <div
+                            class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-emerald-400/20">
+                        </div>
+
+                        <div class="relative z-10 text-center">
+                            <!-- Tenor Section -->
+                            <div class="mb-8">
+                                <p class="text-emerald-200/60 text-sm font-medium uppercase tracking-wider mb-2">Tenor
+                                </p>
+                                <div class="flex items-baseline justify-center gap-1">
+                                    <h4 class="text-6xl font-bold text-white tracking-tight">{{ product.tenor }}</h4>
+                                    <span class="text-xl text-emerald-200/80 font-medium">Bulan</span>
+                                </div>
+                            </div>
+
+                            <!-- Interest Rate Section -->
+                            <div
+                                class="mb-8 inline-block px-6 py-3 rounded-2xl bg-emerald-950/50 border border-emerald-500/20 backdrop-blur-sm">
+                                <p class="text-emerald-400/80 text-xs font-bold uppercase tracking-widest mb-1">Bunga
+                                    Flat</p>
+                                <div class="flex items-baseline justify-center gap-1">
+                                    <span class="text-3xl font-bold text-white">{{ product.interestRate }}%</span>
+                                    <span class="text-sm text-emerald-200/60">/bulan</span>
+                                </div>
+                            </div>
+
+                            <!-- <p-button label="Ajukan Sekarang" [rounded]="true" size="large" severity="success"
+                                class="w-full shadow-lg shadow-emerald-500/10"
+                                styleClass="w-full font-bold py-3 hover:scale-105 transition-transform"
+                                routerLink="/login"></p-button> -->
+                        </div>
+                    </div>
+                    }
+                </div>
+                } @else {
+                <div
+                    class="text-center py-20 bg-emerald-900/30 rounded-[2rem] border border-dashed border-emerald-700/50 mx-4">
+                    <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="pi pi-inbox text-4xl text-emerald-500/50"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-2">Belum Ada Produk</h4>
+                    <p class="text-emerald-200/60">Produk untuk kategori ini belum tersedia saat ini.</p>
+                </div>
+                }
+            </div>
+            }
         </div>
     </section>
 
@@ -138,6 +293,41 @@
             </div>
         </div>
     </section> -->
+
+    <!-- Testimonials Section -->
+    <section class="py-24 bg-emerald-50/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-emerald-600 font-bold tracking-wider text-sm uppercase mb-2 block">Kata Mereka</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Apa Kata Pengguna Fintar?</h2>
+                <div class="w-20 h-1.5 bg-emerald-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @for (item of testimonials; track $index) {
+                <div
+                    class="bg-white p-8 rounded-3xl shadow-sm border border-emerald-100 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center gap-4 mb-6">
+                        <p-avatar [image]="item.avatar" size="large" shape="circle"
+                            styleClass="border-2 border-emerald-500"></p-avatar>
+                        <div>
+                            <h4 class="font-bold text-gray-900">{{item.name}}</h4>
+                            <p class="text-xs text-gray-500 uppercase tracking-wide">{{item.role}}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-1 mb-4">
+                        <i class="pi pi-star-fill text-yellow-400 text-sm"></i>
+                        <i class="pi pi-star-fill text-yellow-400 text-sm"></i>
+                        <i class="pi pi-star-fill text-yellow-400 text-sm"></i>
+                        <i class="pi pi-star-fill text-yellow-400 text-sm"></i>
+                        <i class="pi pi-star-fill text-yellow-400 text-sm"></i>
+                    </div>
+                    <p class="text-gray-600 italic leading-relaxed">"{{item.message}}"</p>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
 
     <!-- FAQ Section -->
     <section id="faq" class="py-20 bg-white">

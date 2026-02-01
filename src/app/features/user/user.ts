@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // PrimeNG
@@ -28,6 +28,7 @@ import { RoleResponse } from '../../core/models/role.model';
     standalone: true,
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         FormsModule,
         TableModule,
         CardModule,
@@ -52,6 +53,7 @@ export class UserComponent implements OnInit {
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
     private roleService = inject(RoleService);
+    private fb = inject(FormBuilder);
 
     users = signal<User[]>([]);
     loading = signal<boolean>(false);
@@ -63,21 +65,23 @@ export class UserComponent implements OnInit {
     userDialogVisible = signal<boolean>(false);
     dialogMode = signal<'create' | 'edit'>('create');
     availableRoles = signal<RoleResponse[]>([]);
-    userForm = signal<{
-        username: string;
-        email: string;
-        password: string;
-        roles: RoleResponse[];
-    }>({
-        username: '',
-        email: '',
-        password: '',
-        roles: []
-    });
+
+    // Reactive Form
+    userForm!: FormGroup;
 
     ngOnInit(): void {
+        this.initForm();
         this.loadUsers();
         this.loadAvailableRoles();
+    }
+
+    initForm() {
+        this.userForm = this.fb.group({
+            username: ['', [Validators.required]],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/)]],
+            roles: [[], [Validators.required]]
+        });
     }
 
     loadUsers(): void {
@@ -107,7 +111,6 @@ export class UserComponent implements OnInit {
     }
 
     loadAvailableRoles(): void {
-        // For now, we'll use a static list. In production, fetch from RoleService
         this.roleService.getAll().subscribe({
             next: (response) => {
                 if (response.success && response.data) {
@@ -127,12 +130,13 @@ export class UserComponent implements OnInit {
 
     openCreateDialog(): void {
         this.dialogMode.set('create');
-        this.userForm.set({
-            username: '',
-            email: '',
-            password: '',
-            roles: []
-        });
+        this.userForm.reset({ roles: [] });
+
+        // Add password validators for create mode
+        const passwordControl = this.userForm.get('password');
+        passwordControl?.setValidators([Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/)]);
+        passwordControl?.updateValueAndValidity();
+
         this.selectedUser.set(null);
         this.userDialogVisible.set(true);
     }
@@ -140,70 +144,54 @@ export class UserComponent implements OnInit {
     openEditDialog(user: User): void {
         this.dialogMode.set('edit');
         console.log(user);
-        this.userForm.set({
+
+        // Clear password validators for edit mode (optional)
+        const passwordControl = this.userForm.get('password');
+        passwordControl?.clearValidators();
+        passwordControl?.setValidators([Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/)]); // Still keep strength check if entered
+        passwordControl?.updateValueAndValidity();
+
+        this.userForm.patchValue({
             username: user.username,
             email: user.email,
-            password: '', // Don't pre-fill password for security
-            roles: user.roles  // Extract role names from RoleResponse objects
+            password: '',
+            roles: user.roles
         });
+
         this.selectedUser.set(user);
         this.userDialogVisible.set(true);
     }
 
     closeUserDialog(): void {
         this.userDialogVisible.set(false);
-        this.userForm.set({
-            username: '',
-            email: '',
-            password: '',
-            roles: []
-        });
+        this.InitFormForClose();
         this.selectedUser.set(null);
     }
 
+    InitFormForClose() {
+        this.userForm.reset({ roles: [] });
+    }
+
     saveUser(): void {
-        const form = this.userForm();
-
-        // Validation
-        if (!form.username || !form.email || !form.roles.length) {
+        if (this.userForm.invalid) {
+            this.userForm.markAllAsTouched();
             this.messageService.add({
                 severity: 'warn',
                 summary: 'Validation Error',
-                detail: 'Username, email, and at least one role are required'
+                detail: 'Please fill all required fields correctly'
             });
             return;
         }
 
-        if (this.dialogMode() === 'create' && !form.password) {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'Validation Error',
-                detail: 'Password is required for new users'
-            });
-            return;
-        }
-
-        // Validate password strength if provided
-        if (form.password) {
-            const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/;
-            if (!passwordPattern.test(form.password)) {
-                this.messageService.add({
-                    severity: 'warn',
-                    summary: 'Validation Error',
-                    detail: 'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 digit'
-                });
-                return;
-            }
-        }
-
+        const formValue = this.userForm.value;
         this.loading.set(true);
 
         if (this.dialogMode() === 'create') {
             const createRequest: CreateUserRequest = {
-                username: form.username,
-                email: form.email,
-                password: form.password,
-                roles: form.roles.map(role => role.name)
+                username: formValue.username,
+                email: formValue.email,
+                password: formValue.password,
+                roles: formValue.roles.map((r: any) => r.name)
             };
 
             this.userService.create(createRequest).subscribe({
@@ -231,14 +219,14 @@ export class UserComponent implements OnInit {
             if (!userId) return;
 
             const updateRequest: UpdateUserRequest = {
-                username: form.username,
-                email: form.email,
-                roles: form.roles.map(role => role.name)
+                username: formValue.username,
+                email: formValue.email,
+                roles: formValue.roles.map((r: any) => r.name)
             };
 
             // Only include password if it was changed
-            if (form.password) {
-                updateRequest.password = form.password;
+            if (formValue.password) {
+                updateRequest.password = formValue.password;
             }
 
             this.userService.update(userId, updateRequest).subscribe({
@@ -262,10 +250,6 @@ export class UserComponent implements OnInit {
                 }
             });
         }
-    }
-
-    updateFormField(field: 'username' | 'email' | 'password' | 'roles', value: any): void {
-        this.userForm.update(form => ({ ...form, [field]: value }));
     }
 
     onViewUser(user: User): void {
@@ -340,20 +324,24 @@ export class UserComponent implements OnInit {
     }
 
     toggleRole(role: RoleResponse): void {
-        const currentRoles = this.userForm().roles;
-        const index = currentRoles.findIndex(r => r.id === role.id);
+        const currentRoles = this.userForm.get('roles')?.value || [];
+        const index = currentRoles.findIndex((r: any) => r.id === role.id);
 
+        let newRoles;
         if (index > -1) {
             // Remove role
-            const newRoles = currentRoles.filter(r => r.id !== role.id);
-            this.updateFormField('roles', newRoles);
+            newRoles = currentRoles.filter((r: any) => r.id !== role.id);
         } else {
             // Add role
-            this.updateFormField('roles', [...currentRoles, role]);
+            newRoles = [...currentRoles, role];
         }
+
+        this.userForm.patchValue({ roles: newRoles });
+        this.userForm.get('roles')?.markAsDirty();
     }
 
     isRoleSelected(role: RoleResponse): boolean {
-        return this.userForm().roles.some(r => r.id === role.id);
+        const currentRoles = this.userForm.get('roles')?.value || [];
+        return currentRoles.some((r: any) => r.id === role.id);
     }
 }

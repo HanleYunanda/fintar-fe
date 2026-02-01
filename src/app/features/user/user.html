@@ -122,37 +122,62 @@
     <p-dialog [header]="dialogMode() === 'create' ? 'Create User' : 'Edit User'" [(visible)]="userDialogVisible"
         [modal]="true" [style]="{ width: '500px' }" [draggable]="false" [resizable]="false">
 
-        <div class="flex flex-col gap-4 py-4">
+        <div class="flex flex-col gap-4 py-4" [formGroup]="userForm">
             <!-- Username -->
             <div class="flex flex-col gap-2">
                 <label for="username" class="font-semibold">Username <span class="text-red-500">*</span></label>
-                <input pInputText id="username" [value]="userForm().username"
-                    (input)="updateFormField('username', $any($event.target).value)" placeholder="Enter username"
-                    class="w-full" />
+                <input pInputText id="username" formControlName="username" placeholder="Enter username" class="w-full"
+                    [class.ng-invalid]="userForm.get('username')?.invalid && (userForm.get('username')?.dirty || userForm.get('username')?.touched)" />
+                @if (userForm.get('username')?.invalid && (userForm.get('username')?.dirty ||
+                userForm.get('username')?.touched)) {
+                <small class="text-red-500">Username is required.</small>
+                }
             </div>
 
             <!-- Email -->
             <div class="flex flex-col gap-2">
                 <label for="email" class="font-semibold">Email <span class="text-red-500">*</span></label>
-                <input pInputText id="email" type="email" [value]="userForm().email"
-                    (input)="updateFormField('email', $any($event.target).value)" placeholder="Enter email"
-                    class="w-full" />
+                <input pInputText id="email" type="email" formControlName="email" placeholder="Enter email"
+                    class="w-full"
+                    [class.ng-invalid]="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)" />
+                @if (userForm.get('email')?.hasError('required') && (userForm.get('email')?.dirty ||
+                userForm.get('email')?.touched)) {
+                <small class="text-red-500">Email is required.</small>
+                }
+                @if (userForm.get('email')?.hasError('email') && (userForm.get('email')?.dirty ||
+                userForm.get('email')?.touched)) {
+                <small class="text-red-500">Please enter a valid email address.</small>
+                }
             </div>
 
             <!-- Password -->
-            @if (dialogMode() === 'create') {
+            @if (dialogMode() === 'create' || userForm.get('password')?.value) {
             <div class="flex flex-col gap-2">
-                <label for="password" class="font-semibold">Password <span class="text-red-500">*</span></label>
-                <input pInputText id="password" type="password" [value]="userForm().password"
-                    (input)="updateFormField('password', $any($event.target).value)" placeholder="Enter password"
-                    class="w-full" />
+                <label for="password" class="font-semibold">
+                    Password
+                    @if(dialogMode() === 'create') { <span class="text-red-500">*</span> }
+                </label>
+                <input pInputText id="password" type="password" formControlName="password" placeholder="Enter password"
+                    class="w-full"
+                    [class.ng-invalid]="userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)" />
+
+                @if (userForm.get('password')?.hasError('required') && (userForm.get('password')?.dirty ||
+                userForm.get('password')?.touched)) {
+                <small class="text-red-500">Password is required.</small>
+                }
+                @if (userForm.get('password')?.hasError('pattern') && (userForm.get('password')?.dirty ||
+                userForm.get('password')?.touched)) {
+                <small class="text-red-500">Password must be at least 8 chars with 1 uppercase, 1 lowercase, 1
+                    number.</small>
+                }
             </div>
             }
 
             <!-- Roles -->
             <div class="flex flex-col gap-2">
                 <label class="font-semibold">Roles <span class="text-red-500">*</span></label>
-                <div class="border border-gray-300 rounded-md p-3 max-h-60 overflow-y-auto">
+                <div class="border border-gray-300 rounded-md p-3 max-h-60 overflow-y-auto"
+                    [class.border-red-500]="userForm.get('roles')?.invalid && userForm.get('roles')?.touched">
                     @if (availableRoles().length === 0) {
                     <p class="text-gray-500 text-center py-2">Loading roles...</p>
                     } @else {
@@ -160,7 +185,8 @@
                         @for (role of availableRoles(); track role.id) {
                         <div class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
                             <p-checkbox [binary]="true" [ngModel]="isRoleSelected(role)"
-                                (ngModelChange)="toggleRole(role)" [inputId]="'role-' + role.id">
+                                [ngModelOptions]="{standalone: true}" (ngModelChange)="toggleRole(role)"
+                                [inputId]="'role-' + role.id">
                             </p-checkbox>
                             <label [for]="'role-' + role.id" class="cursor-pointer flex-1">
                                 <div class="font-medium text-sm">{{ role.name }}</div>
@@ -171,8 +197,11 @@
                     }
                 </div>
                 <div class="text-sm text-gray-600 mt-1">
-                    Selected: <span class="font-semibold">{{ userForm().roles.length }}</span> role(s)
+                    Selected: <span class="font-semibold">{{ userForm.get('roles')?.value?.length || 0 }}</span> role(s)
                 </div>
+                @if (userForm.get('roles')?.invalid && userForm.get('roles')?.touched) {
+                <small class="text-red-500">At least one role must be selected.</small>
+                }
             </div>
         </div>
 
