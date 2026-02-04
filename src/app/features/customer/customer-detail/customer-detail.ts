@@ -17,6 +17,7 @@ import { MessageService } from 'primeng/api';
 
 // Core
 import { CustomerDetailService } from '../../../core/services/customer-detail.service';
+import { LoanService } from '../../../core/services/loan.service';
 import { CustomerDetail } from '../../../core/models/customer.model';
 import { LoanApplication, LoanStatus, LoanDocument } from '../../../core/models/loan.model';
 import { environment } from '../../../../environments/environment';
@@ -45,6 +46,7 @@ export class CustomerDetailComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
     private customerService = inject(CustomerDetailService);
+    private loanService = inject(LoanService);
     private messageService = inject(MessageService);
 
     customerId = signal<string>('');
@@ -70,10 +72,12 @@ export class CustomerDetailComponent implements OnInit {
         this.customerService.getById(id).subscribe({
             next: (res) => {
                 if (res.success && res.data) {
-                    console.log('Customer response:', res.data);
                     this.customer.set(res.data);
-                    this.documents.set(res.data.documentResponses || []);
-                    this.loans.set(res.data.loans || []);
+                    this.documents.set(res.data.documents || []);
+
+                    if (res.data.user?.id) {
+                        this.loadLoanHistory(res.data.user.id);
+                    }
                 }
                 this.loading.set(false);
             },
@@ -85,6 +89,19 @@ export class CustomerDetailComponent implements OnInit {
                     detail: 'Failed to load customer details'
                 });
                 this.loading.set(false);
+            }
+        });
+    }
+
+    loadLoanHistory(userId: string): void {
+        this.loanService.getHistoryByUserId(userId).subscribe({
+            next: (res) => {
+                if (res.success && res.data) {
+                    this.loans.set(res.data);
+                }
+            },
+            error: (err) => {
+                console.error('Error loading loan history', err);
             }
         });
     }

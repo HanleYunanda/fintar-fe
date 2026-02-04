@@ -192,10 +192,14 @@
                         <p-table [value]="previousLoans()" [rowHover]="true" class="p-datatable-sm">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Principal</th>
-                                    <th>Date</th>
-                                    <th>Last Status</th>
+                                    <th pSortableColumn="product.plafond.name">Product <p-sortIcon
+                                            field="product.plafond.name"></p-sortIcon></th>
+                                    <th pSortableColumn="principalDebt">Principal <p-sortIcon
+                                            field="principalDebt"></p-sortIcon></th>
+                                    <th pSortableColumn="createdAt">Date <p-sortIcon field="createdAt"></p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="status">Last Status <p-sortIcon field="status"></p-sortIcon>
+                                    </th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-prev>

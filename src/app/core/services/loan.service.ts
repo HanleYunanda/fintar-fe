@@ -24,6 +24,10 @@ export class LoanService {
         return this.http.get<ApiResponse<LoanDetailResponse>>(`${this.API_URL}/${id}`);
     }
 
+    getHistoryByUserId(userId: string): Observable<ApiResponse<LoanApplication[]>> {
+        return this.http.get<ApiResponse<LoanApplication[]>>(`${this.API_URL}/user/${userId}`);
+    }
+
     create(request: CreateLoanRequest): Observable<ApiResponse<LoanApplication>> {
         return this.http.post<ApiResponse<LoanApplication>>(this.API_URL, request);
     }

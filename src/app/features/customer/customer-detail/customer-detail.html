@@ -168,7 +168,7 @@
                                         </div>
                                         <p-divider styleClass="my-3"></p-divider>
                                         <div class="flex justify-end">
-                                            <p-image [src]="baseUri + '/view/' + doc.id" [alt]="doc.filename" width="80"
+                                            <p-image [src]="baseUri + '/' + doc.id" [alt]="doc.filename"
                                                 [preview]="true">
                                             </p-image>
                                         </div>
@@ -186,10 +186,14 @@
                                     [tableStyle]="{ 'min-width': '100%' }" class="p-datatable-sm">
                                     <ng-template pTemplate="header">
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Product</th>
-                                            <th class="text-right">Amount</th>
-                                            <th class="text-center">Status</th>
+                                            <th pSortableColumn="createdAt">Date <p-sortIcon
+                                                    field="createdAt"></p-sortIcon></th>
+                                            <th pSortableColumn="product.plafond.name">Product <p-sortIcon
+                                                    field="product.plafond.name"></p-sortIcon></th>
+                                            <th pSortableColumn="principalDebt" class="text-right">Amount <p-sortIcon
+                                                    field="principalDebt"></p-sortIcon></th>
+                                            <th pSortableColumn="status" class="text-center">Status <p-sortIcon
+                                                    field="status"></p-sortIcon></th>
                                             <th style="width: 3rem"></th>
                                         </tr>
                                     </ng-template>

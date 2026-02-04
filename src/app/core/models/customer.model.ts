@@ -34,6 +34,6 @@ export interface CustomerDetail {
         email: string;
         roles: RoleResponse[];
     };
-    documentResponses: LoanDocument[];
+    documents: LoanDocument[];
     loans?: LoanApplication[];
 }

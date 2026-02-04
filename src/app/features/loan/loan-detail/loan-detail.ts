@@ -136,14 +136,16 @@ export class LoanDetailComponent implements OnInit {
     }
 
     loadPreviousLoans(customerId: string): void {
-        this.loanService.getAll().subscribe({
+        this.loanService.getHistoryByUserId(customerId).subscribe({
             next: (res) => {
                 if (res.success && res.data) {
-                    // const otherLoans = res.data.filter(l =>
-                    //     (l.customerId === customerId) && l.id !== this.loanId()
-                    // );
-                    // this.previousLoans.set(otherLoans);
+                    const currentLoanId = this.loanId();
+                    const otherLoans = res.data.filter(l => l.id !== currentLoanId);
+                    this.previousLoans.set(otherLoans);
                 }
+            },
+            error: (err) => {
+                console.error('Error loading previous loans', err);
             }
         });
     }
