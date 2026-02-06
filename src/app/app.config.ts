@@ -13,17 +13,15 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(
-      withInterceptors([authInterceptor, errorInterceptor])
-    ),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     ConfirmationService,
     providePrimeNG({
       theme: {
         preset: Aura,
         options: {
-          darkModeSelector: '.my-app-dark'
-        }
-      }
-    })
-  ]
+          darkModeSelector: '.my-app-dark',
+        },
+      },
+    }),
+  ],
 };

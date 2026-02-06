@@ -8,9 +8,8 @@ describe('Plafond', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Plafond]
-    })
-    .compileComponents();
+      imports: [Plafond],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Plafond);
     component = fixture.componentInstance;

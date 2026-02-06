@@ -1,20 +1,20 @@
 export interface Permission {
-    id: string;
-    code: string;
+  id: string;
+  code: string;
 }
 
 export interface PermissionRequest {
-    code: string;
+  code: string;
 }
 
 export interface AssignPermissionsRequest {
-    permissionCodes: string[];
+  permissionCodes: string[];
 }
 
 export interface AssignPermissionsResponse {
-    role: {
-        id: string;
-        name: string;
-    };
-    permissions: Permission[];
+  role: {
+    id: string;
+    name: string;
+  };
+  permissions: Permission[];
 }

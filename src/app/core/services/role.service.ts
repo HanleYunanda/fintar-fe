@@ -10,7 +10,6 @@ import { AssignPermissionsRequest, AssignPermissionsResponse } from '../models/p
   providedIn: 'root',
 })
 export class RoleService {
-
   private http = inject(HttpClient);
   private readonly API_URL = `${environment.apiUrl}/role`;
 
@@ -34,8 +33,13 @@ export class RoleService {
     return this.http.delete<ApiResponse<void>>(`${this.API_URL}/${id}`);
   }
 
-  assignPermissions(roleId: string, request: AssignPermissionsRequest): Observable<ApiResponse<AssignPermissionsResponse>> {
-    return this.http.post<ApiResponse<AssignPermissionsResponse>>(`${this.API_URL}/${roleId}/assign-permissions`, request);
+  assignPermissions(
+    roleId: string,
+    request: AssignPermissionsRequest,
+  ): Observable<ApiResponse<AssignPermissionsResponse>> {
+    return this.http.post<ApiResponse<AssignPermissionsResponse>>(
+      `${this.API_URL}/${roleId}/assign-permissions`,
+      request,
+    );
   }
-
 }

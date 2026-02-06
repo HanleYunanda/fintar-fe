@@ -6,17 +6,17 @@ import { ApiResponse } from '../models/api.model';
 import { Permission, PermissionRequest } from '../models/permission.model';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class PermissionService {
-    private http = inject(HttpClient);
-    private readonly API_URL = `${environment.apiUrl}/permission`;
+  private http = inject(HttpClient);
+  private readonly API_URL = `${environment.apiUrl}/permission`;
 
-    getAll(): Observable<ApiResponse<Permission[]>> {
-        return this.http.get<ApiResponse<Permission[]>>(this.API_URL);
-    }
+  getAll(): Observable<ApiResponse<Permission[]>> {
+    return this.http.get<ApiResponse<Permission[]>>(this.API_URL);
+  }
 
-    create(request: PermissionRequest): Observable<ApiResponse<Permission>> {
-        return this.http.post<ApiResponse<Permission>>(this.API_URL, request);
-    }
+  create(request: PermissionRequest): Observable<ApiResponse<Permission>> {
+    return this.http.post<ApiResponse<Permission>>(this.API_URL, request);
+  }
 }

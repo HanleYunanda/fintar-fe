@@ -30,7 +30,7 @@ import { Product } from '../../core/models/product.model';
     CardModule,
     DividerModule,
     AvatarModule,
-    ImageModule
+    ImageModule,
   ],
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.css',
@@ -48,7 +48,7 @@ export class LandingPage implements OnInit {
     const selected = this.selectedPlafond();
     if (!selected) return [];
     return this.products()
-      .filter(p => p.plafond.id === selected.id)
+      .filter((p) => p.plafond.id === selected.id)
       .sort((a, b) => a.tenor - b.tenor);
   });
 
@@ -67,89 +67,110 @@ export class LandingPage implements OnInit {
       title: 'Terdaftar & Diawasi oleh OJK',
       description: 'Privasi data dan kenyamanan Anda adalah prioritas utama kami.',
       image: '/office-calc.webp', // Modern office/Team
-    }
+    },
   ];
 
   loanSteps = [
     {
       icon: 'pi pi-mobile',
       title: 'Download & Registrasi',
-      description: 'Unduh aplikasi Fintar dan daftarkan akun Anda hanya dalam 2 menit.'
+      description: 'Unduh aplikasi Fintar dan daftarkan akun Anda hanya dalam 2 menit.',
     },
     {
       icon: 'pi pi-id-card',
       title: 'Lengkapi Data',
-      description: 'Isi data diri dan upload dokumen yang diperlukan (KTP & NPWP).'
+      description: 'Isi data diri dan upload dokumen yang diperlukan (KTP & NPWP).',
     },
     {
       icon: 'pi pi-wallet',
       title: 'Pilih Pinjaman',
-      description: 'Pilih jumlah plafond dan tenor yang sesuai dengan kebutuhan Anda.'
+      description: 'Pilih jumlah plafond dan tenor yang sesuai dengan kebutuhan Anda.',
     },
     {
       icon: 'pi pi-check-circle',
       title: 'Verifikasi & Cair',
-      description: 'Data diverifikasi otomatis, dan dana langsung cair ke rekening Anda.'
-    }
+      description: 'Data diverifikasi otomatis, dan dana langsung cair ke rekening Anda.',
+    },
   ];
 
   faqs = [
     {
       question: 'Apa saja syarat mengajukan pinjaman di Fintar?',
-      answer: 'Cukup menyiapkan KTP, berstatus WNI usia 18-55 tahun, dan memiliki penghasilan tetap.'
+      answer:
+        'Cukup menyiapkan KTP, berstatus WNI usia 18-55 tahun, dan memiliki penghasilan tetap.',
     },
     {
       question: 'Berapa lama proses pencairan dana?',
-      answer: 'Setelah aplikasi disetujui, dana akan dikirimkan ke rekening Anda dalam waktu kurang dari 24 jam.'
+      answer:
+        'Setelah aplikasi disetujui, dana akan dikirimkan ke rekening Anda dalam waktu kurang dari 24 jam.',
     },
     {
       question: 'Bagaimana cara membayar cicilan?',
-      answer: 'Anda dapat membayar melalui Virtual Account (VA), m-Banking, atau toko retail seperti Alfamart dan Indomaret.'
+      answer:
+        'Anda dapat membayar melalui Virtual Account (VA), m-Banking, atau toko retail seperti Alfamart dan Indomaret.',
     },
     {
       question: 'Apakah ada biaya tersembunyi?',
-      answer: 'Tidak ada. Semua biaya administrasi dan bunga akan ditampilkan secara transparan di awal aplikasi.'
-    }
+      answer:
+        'Tidak ada. Semua biaya administrasi dan bunga akan ditampilkan secara transparan di awal aplikasi.',
+    },
   ];
 
   benefits = [
-    { icon: 'pi pi-bolt', title: 'Approval Cepat', desc: 'Keputusan pinjaman hanya dalam hitungan menit.' },
-    { icon: 'pi pi-shield', title: 'Aman & Resmi', desc: 'Data terenkripsi dan diawasi oleh otoritas terkait.' },
-    { icon: 'pi pi-percentage', title: 'Bunga Kompetitif', desc: 'Bunga rendah mulai dari 0.1% per hari.' },
-    { icon: 'pi pi-mobile', title: 'Full Online', desc: 'Ajuin dimana saja tanpa harus ke kantor.' }
+    {
+      icon: 'pi pi-bolt',
+      title: 'Approval Cepat',
+      desc: 'Keputusan pinjaman hanya dalam hitungan menit.',
+    },
+    {
+      icon: 'pi pi-shield',
+      title: 'Aman & Resmi',
+      desc: 'Data terenkripsi dan diawasi oleh otoritas terkait.',
+    },
+    {
+      icon: 'pi pi-percentage',
+      title: 'Bunga Kompetitif',
+      desc: 'Bunga rendah mulai dari 0.1% per hari.',
+    },
+    {
+      icon: 'pi pi-mobile',
+      title: 'Full Online',
+      desc: 'Ajuin dimana saja tanpa harus ke kantor.',
+    },
   ];
 
   testimonials = [
     {
       name: 'Budi Santoso',
       role: 'Wiraswasta',
-      message: 'Prosesnya sangat cepat, dana cair dalam hitungan jam. Sangat membantu untuk modal usaha saya.',
-      avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
+      message:
+        'Prosesnya sangat cepat, dana cair dalam hitungan jam. Sangat membantu untuk modal usaha saya.',
+      avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
     },
     {
       name: 'Siti Aminah',
       role: 'Ibu Rumah Tangga',
       message: 'Aplikasi mudah digunakan, bunganya juga terjangkau. Terima kasih Fintar!',
-      avatar: 'https://randomuser.me/api/portraits/women/2.jpg'
+      avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
     },
     {
       name: 'Rudi Hermawan',
       role: 'Karyawan Swasta',
       message: 'Solusi tepat saat butuh dana mendesak. Syaratnya tidak ribet dan transparan.',
-      avatar: 'https://randomuser.me/api/portraits/men/3.jpg'
+      avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
     },
     {
       name: 'Dewi Kartika',
       role: 'Pedagang Online',
       message: 'Customer service sangat ramah dan membantu. Pengalaman meminjam yang menyenangkan.',
-      avatar: 'https://randomuser.me/api/portraits/women/4.jpg'
+      avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
     },
     {
       name: 'Agus Pratama',
       role: 'Driver Ojol',
       message: 'Sangat terbantu dengan Fintar. Tenor fleksibel jadi angsuran tidak memberatkan.',
-      avatar: 'https://randomuser.me/api/portraits/men/5.jpg'
-    }
+      avatar: 'https://randomuser.me/api/portraits/men/5.jpg',
+    },
   ];
 
   ngOnInit(): void {
@@ -158,14 +179,15 @@ export class LandingPage implements OnInit {
   }
 
   loadPlafonds(): void {
-    this.plafondService.getAll().subscribe({
+    this.plafondService.getActive().subscribe({
       next: (res) => {
         if (res.success && res.data) {
-          // Sort by maxAmount ascending (smallest first)
-          const sortedData = res.data.sort((a, b) => a.maxAmount - b.maxAmount);
-          this.plafonds.set(sortedData.slice(0, 4)); // Get top 4 for display
+          // Data is already active and sorted by orderNumber from backend logic (implied by requirement)
+          // But to be safe based on "orderNumber" availability:
+          const sorted = res.data.sort((a, b) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
+          this.plafonds.set(sorted);
         }
-      }
+      },
     });
   }
 
@@ -175,7 +197,7 @@ export class LandingPage implements OnInit {
         if (res.success && res.data) {
           this.products.set(res.data);
         }
-      }
+      },
     });
   }
 

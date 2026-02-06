@@ -1,6 +1,12 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators, FormControl, FormGroup } from '@angular/forms';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+  FormControl,
+  FormGroup,
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
 // PrimeNG Imports
@@ -35,11 +41,11 @@ interface LoginForm {
     ButtonModule,
     FloatLabelModule,
     MessageModule,
-    ImageModule
+    ImageModule,
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Login {
   private fb = inject(FormBuilder);
@@ -51,7 +57,7 @@ export class Login {
 
   loginForm: FormGroup<LoginForm> = this.fb.group<LoginForm>({
     username: this.fb.nonNullable.control('', [Validators.required]),
-    password: this.fb.nonNullable.control('', [Validators.required])
+    password: this.fb.nonNullable.control('', [Validators.required]),
   });
 
   onLogin(): void {
@@ -74,7 +80,7 @@ export class Login {
       error: (err: any) => {
         this.isLoading.set(false);
         this.errorMessage.set('Invalid username or password.');
-      }
+      },
     });
   }
 }

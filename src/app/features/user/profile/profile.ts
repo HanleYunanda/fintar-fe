@@ -11,38 +11,32 @@ import { BadgeModule } from 'primeng/badge';
 import { ChipModule } from 'primeng/chip';
 
 @Component({
-    selector: 'app-profile',
-    standalone: true,
-    imports: [
-        CommonModule,
-        AvatarModule,
-        DividerModule,
-        BadgeModule,
-        ChipModule
-    ],
-    templateUrl: './profile.html'
+  selector: 'app-profile',
+  standalone: true,
+  imports: [CommonModule, AvatarModule, DividerModule, BadgeModule, ChipModule],
+  templateUrl: './profile.html',
 })
 export class ProfileComponent implements OnInit {
-    private authService = inject(AuthService);
+  private authService = inject(AuthService);
 
-    user = signal<LoginResponse | null>(null);
+  user = signal<LoginResponse | null>(null);
 
-    ngOnInit() {
-        this.fetchProfile();
-    }
+  ngOnInit() {
+    this.fetchProfile();
+  }
 
-    fetchProfile() {
-        this.authService.getCurrentUser().subscribe({
-            next: (response: ApiResponse<LoginResponse>) => {
-                if (response.success) {
-                    this.user.set(response.data);
-                }
-            },
-            error: (err: any) => {
-                console.error('Error fetching profile:', err);
-                // Fallback to local storage user if API fails
-                this.user.set(this.authService.getUser());
-            }
-        });
-    }
+  fetchProfile() {
+    this.authService.getCurrentUser().subscribe({
+      next: (response: ApiResponse<LoginResponse>) => {
+        if (response.success) {
+          this.user.set(response.data);
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching profile:', err);
+        // Fallback to local storage user if API fails
+        this.user.set(this.authService.getUser());
+      },
+    });
+  }
 }

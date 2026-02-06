@@ -7,61 +7,60 @@ import { LoginRequest, LoginResponse } from '../models/auth.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-    private http = inject(HttpClient);
-    private readonly API_URL = `${environment.apiUrl}/auth`;
-    private readonly TOKEN_KEY = 'auth_token';
+  private http = inject(HttpClient);
+  private readonly API_URL = `${environment.apiUrl}/auth`;
+  private readonly TOKEN_KEY = 'auth_token';
 
-    login(request: LoginRequest): Observable<ApiResponse<LoginResponse>> {
-        return this.http.post<ApiResponse<LoginResponse>>(`${this.API_URL}/login`, request)
-            .pipe(
-                tap(response => {
-                    if (response.success && response.data.token) {
-                        this.saveToken(response.data.token);
-                        this.saveUser(response.data);
-                    }
-                })
-            );
-    }
+  login(request: LoginRequest): Observable<ApiResponse<LoginResponse>> {
+    return this.http.post<ApiResponse<LoginResponse>>(`${this.API_URL}/login`, request).pipe(
+      tap((response) => {
+        if (response.success && response.data.token) {
+          this.saveToken(response.data.token);
+          this.saveUser(response.data);
+        }
+      }),
+    );
+  }
 
-    saveToken(token: string): void {
-        localStorage.setItem(this.TOKEN_KEY, token);
-    }
+  saveToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
+  }
 
-    getToken(): string | null {
-        return localStorage.getItem(this.TOKEN_KEY);
-    }
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
 
-    saveUser(user: LoginResponse): void {
-        localStorage.setItem('user', JSON.stringify(user));
-    }
+  saveUser(user: LoginResponse): void {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
 
-    getUser(): LoginResponse | null {
-        const user = localStorage.getItem('user');
-        return user ? JSON.parse(user) : null;
-    }
+  getUser(): LoginResponse | null {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
 
-    isLoggedIn(): boolean {
-        return !!this.getToken() && !!this.getUser();
-    }
+  isLoggedIn(): boolean {
+    return !!this.getToken() && !!this.getUser();
+  }
 
-    getCurrentUser(): Observable<ApiResponse<LoginResponse>> {
-        return this.http.get<ApiResponse<LoginResponse>>(`${this.API_URL}/me`);
-    }
+  getCurrentUser(): Observable<ApiResponse<LoginResponse>> {
+    return this.http.get<ApiResponse<LoginResponse>>(`${this.API_URL}/me`);
+  }
 
-    logout(): void {
-        localStorage.removeItem(this.TOKEN_KEY);
-        localStorage.removeItem('user');
-    }
+  logout(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem('user');
+  }
 
-    hasPermission(permission: string): boolean {
-        const user = this.getUser();
-        return user?.permissions?.includes(permission) ?? false;
-    }
+  hasPermission(permission: string): boolean {
+    const user = this.getUser();
+    return user?.permissions?.includes(permission) ?? false;
+  }
 
-    forgotPassword(email: string): Observable<ApiResponse<any>> {
-        return this.http.post<ApiResponse<any>>(`${this.API_URL}/forgot-password`, { email });
-    }
+  forgotPassword(email: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.API_URL}/forgot-password`, { email });
+  }
 }

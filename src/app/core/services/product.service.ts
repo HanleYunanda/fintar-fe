@@ -6,17 +6,17 @@ import { ApiResponse } from '../models/api.model';
 import { Product, CreateProductRequest } from '../models/product.model';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductService {
-    private http = inject(HttpClient);
-    private readonly API_URL = `${environment.apiUrl}/product`;
+  private http = inject(HttpClient);
+  private readonly API_URL = `${environment.apiUrl}/product`;
 
-    getAll(): Observable<ApiResponse<Product[]>> {
-        return this.http.get<ApiResponse<Product[]>>(this.API_URL);
-    }
+  getAll(): Observable<ApiResponse<Product[]>> {
+    return this.http.get<ApiResponse<Product[]>>(this.API_URL);
+  }
 
-    create(request: CreateProductRequest): Observable<ApiResponse<Product>> {
-        return this.http.post<ApiResponse<Product>>(this.API_URL, request);
-    }
+  create(request: CreateProductRequest): Observable<ApiResponse<Product>> {
+    return this.http.post<ApiResponse<Product>>(this.API_URL, request);
+  }
 }

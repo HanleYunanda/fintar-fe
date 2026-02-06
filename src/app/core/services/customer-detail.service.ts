@@ -6,17 +6,17 @@ import { ApiResponse } from '../models/api.model';
 import { CustomerDetail } from '../models/customer.model';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class CustomerDetailService {
-    private http = inject(HttpClient);
-    private readonly API_URL = `${environment.apiUrl}/customer-detail`;
+  private http = inject(HttpClient);
+  private readonly API_URL = `${environment.apiUrl}/customer-detail`;
 
-    getAll(): Observable<ApiResponse<CustomerDetail[]>> {
-        return this.http.get<ApiResponse<CustomerDetail[]>>(this.API_URL);
-    }
+  getAll(): Observable<ApiResponse<CustomerDetail[]>> {
+    return this.http.get<ApiResponse<CustomerDetail[]>>(this.API_URL);
+  }
 
-    getById(id: string): Observable<ApiResponse<CustomerDetail>> {
-        return this.http.get<ApiResponse<CustomerDetail>>(`${this.API_URL}/${id}`);
-    }
+  getById(id: string): Observable<ApiResponse<CustomerDetail>> {
+    return this.http.get<ApiResponse<CustomerDetail>>(`${this.API_URL}/${id}`);
+  }
 }

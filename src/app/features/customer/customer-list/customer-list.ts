@@ -17,56 +17,56 @@ import { CustomerDetailService } from '../../../core/services/customer-detail.se
 import { CustomerDetail } from '../../../core/models/customer.model';
 
 @Component({
-    selector: 'app-customer-list',
-    standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        TableModule,
-        CardModule,
-        ButtonModule,
-        InputTextModule,
-        TooltipModule,
-        ToastModule
-    ],
-    providers: [MessageService],
-    templateUrl: './customer-list.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-customer-list',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    TableModule,
+    CardModule,
+    ButtonModule,
+    InputTextModule,
+    TooltipModule,
+    ToastModule,
+  ],
+  providers: [MessageService],
+  templateUrl: './customer-list.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomerListComponent implements OnInit {
-    private router = inject(Router);
-    private customerService = inject(CustomerDetailService);
-    private messageService = inject(MessageService);
+  private router = inject(Router);
+  private customerService = inject(CustomerDetailService);
+  private messageService = inject(MessageService);
 
-    customers = signal<CustomerDetail[]>([]);
-    loading = signal<boolean>(false);
+  customers = signal<CustomerDetail[]>([]);
+  loading = signal<boolean>(false);
 
-    ngOnInit(): void {
-        this.loadCustomers();
-    }
+  ngOnInit(): void {
+    this.loadCustomers();
+  }
 
-    loadCustomers(): void {
-        this.loading.set(true);
-        this.customerService.getAll().subscribe({
-            next: (response) => {
-                if (response.success && response.data) {
-                    this.customers.set(response.data);
-                }
-                this.loading.set(false);
-            },
-            error: (err) => {
-                console.error('Error loading customers:', err);
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Failed to load customers'
-                });
-                this.loading.set(false);
-            }
+  loadCustomers(): void {
+    this.loading.set(true);
+    this.customerService.getAll().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.customers.set(response.data);
+        }
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading customers:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load customers',
         });
-    }
+        this.loading.set(false);
+      },
+    });
+  }
 
-    viewDetail(id: string): void {
-        this.router.navigate(['/customer', id]);
-    }
+  viewDetail(id: string): void {
+    this.router.navigate(['/customer', id]);
+  }
 }

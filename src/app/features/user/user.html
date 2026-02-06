@@ -1,214 +1,331 @@
 <div class="user-container">
-    <p-toast></p-toast>
-    <p-confirmDialog></p-confirmDialog>
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
 
-    <p-card>
-        <ng-template pTemplate="header">
-            <div class="flex justify-between items-center p-4">
-                <h2 class="text-xl font-semibold m-0">User Management</h2>
-                <p-button label="Create User" icon="pi pi-plus" (click)="onCreateUser()" severity="success"></p-button>
-            </div>
-        </ng-template>
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="flex justify-between items-center p-4">
+        <h2 class="text-xl font-semibold m-0">User Management</h2>
+        <p-button
+          label="Create User"
+          icon="pi pi-plus"
+          (click)="onCreateUser()"
+          severity="success"
+        ></p-button>
+      </div>
+    </ng-template>
 
-        <p-table #dt [value]="users()" [loading]="loading()" [paginator]="true" [rows]="10"
-            [rowsPerPageOptions]="[5, 10, 20]" [globalFilterFields]="['username', 'email']" class="p-datatable-sm"
-            [tableStyle]="{ 'min-width': '60rem' }">
-
-            <ng-template pTemplate="caption">
-                <div class="flex justify-between items-center">
-                    <span class="p-input-icon-left w-full md:w-auto">
-                        <i class="pi pi-search me-3"></i>
-                        <input pInputText type="text" placeholder="Search users..." class="w-full md:w-80"
-                            (input)="dt.filterGlobal($any($event.target).value, 'contains')" />
-                    </span>
-                </div>
-            </ng-template>
-
-            <ng-template pTemplate="header">
-                <tr>
-                    <th pSortableColumn="username">
-                        Username <p-sortIcon field="username"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="email">
-                        Email <p-sortIcon field="email"></p-sortIcon>
-                    </th>
-                    <th>Roles & Permissions</th>
-                    <th>Actions</th>
-                </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-user>
-                <tr>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>
-                        <p-button label="View" icon="pi pi-eye" [outlined]="true" size="small"
-                            (click)="showRolesPermissions(user)">
-                        </p-button>
-                    </td>
-                    <td>
-                        <div class="flex gap-2">
-                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info"
-                                (click)="onViewUser(user)" pTooltip="View Details" tooltipPosition="top"></p-button>
-                            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warn"
-                                (click)="onEditUser(user)" pTooltip="Edit" tooltipPosition="top"></p-button>
-                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
-                                (click)="onDeleteUser(user)" pTooltip="Delete" tooltipPosition="top"></p-button>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="4" class="text-center py-8">
-                        <i class="pi pi-users text-4xl text-gray-400 mb-3"></i>
-                        <p class="text-gray-500">No users found</p>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </p-card>
-
-    <!-- Roles & Permissions Dialog -->
-    <p-dialog [header]="'Roles & Permissions - ' + (selectedUser()?.username || '')"
-        [(visible)]="rolesPermissionsDialogVisible" [modal]="true" [style]="{ width: '600px' }" [draggable]="false"
-        [resizable]="false">
-
-        @if (selectedUser()) {
-        <div class="flex flex-col gap-6 py-4">
-            <!-- Roles Section -->
-            <div>
-                <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <i class="pi pi-shield text-blue-600"></i>
-                    Roles
-                </h3>
-                @if (selectedUser()!.roles && selectedUser()!.roles.length > 0) {
-                <div class="flex flex-wrap gap-2">
-                    @for (role of selectedUser()!.roles; track role.id) {
-                    <p-chip [label]="role.name" icon="pi pi-shield" class="bg-blue-100 text-blue-800"></p-chip>
-                    }
-                </div>
-                } @else {
-                <p class="text-gray-500 italic">No roles assigned</p>
-                }
-            </div>
-
-            <!-- Permissions Section -->
-            <div>
-                <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <i class="pi pi-key text-green-600"></i>
-                    Permissions (from all roles)
-                </h3>
-                @if (getUserPermissions(selectedUser()!).length > 0) {
-                <div class="flex flex-wrap gap-2">
-                    @for (permission of getUserPermissions(selectedUser()!); track permission) {
-                    <p-chip [label]="permission" icon="pi pi-key" class="bg-green-100 text-green-800"></p-chip>
-                    }
-                </div>
-                } @else {
-                <p class="text-gray-500 italic">No permissions assigned</p>
-                }
-            </div>
+    <p-table
+      #dt
+      [value]="users()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      [globalFilterFields]="['username', 'email']"
+      class="p-datatable-sm"
+      [tableStyle]="{ 'min-width': '60rem' }"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-between items-center">
+          <span class="p-input-icon-left w-full md:w-auto">
+            <i class="pi pi-search me-3"></i>
+            <input
+              pInputText
+              type="text"
+              placeholder="Search users..."
+              class="w-full md:w-80"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            />
+          </span>
         </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="username">Username <p-sortIcon field="username"></p-sortIcon></th>
+          <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+          <th>Roles & Permissions</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <p-button
+              label="View"
+              icon="pi pi-eye"
+              [outlined]="true"
+              size="small"
+              (click)="showRolesPermissions(user)"
+            >
+            </p-button>
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <p-button
+                icon="pi pi-eye"
+                [rounded]="true"
+                [text]="true"
+                severity="info"
+                (click)="onViewUser(user)"
+                pTooltip="View Details"
+                tooltipPosition="top"
+              ></p-button>
+              <p-button
+                icon="pi pi-pencil"
+                [rounded]="true"
+                [text]="true"
+                severity="warn"
+                (click)="onEditUser(user)"
+                pTooltip="Edit"
+                tooltipPosition="top"
+              ></p-button>
+              <p-button
+                icon="pi pi-trash"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                (click)="onDeleteUser(user)"
+                pTooltip="Delete"
+                tooltipPosition="top"
+              ></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="text-center py-8">
+            <i class="pi pi-users text-4xl text-gray-400 mb-3"></i>
+            <p class="text-gray-500">No users found</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Roles & Permissions Dialog -->
+  <p-dialog
+    [header]="'Roles & Permissions - ' + (selectedUser()?.username || '')"
+    [(visible)]="rolesPermissionsDialogVisible"
+    [modal]="true"
+    [style]="{ width: '600px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    @if (selectedUser()) {
+      <div class="flex flex-col gap-6 py-4">
+        <!-- Roles Section -->
+        <div>
+          <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+            <i class="pi pi-shield text-blue-600"></i>
+            Roles
+          </h3>
+          @if (selectedUser()!.roles && selectedUser()!.roles.length > 0) {
+            <div class="flex flex-wrap gap-2">
+              @for (role of selectedUser()!.roles; track role.id) {
+                <p-chip
+                  [label]="role.name"
+                  icon="pi pi-shield"
+                  class="bg-blue-100 text-blue-800"
+                ></p-chip>
+              }
+            </div>
+          } @else {
+            <p class="text-gray-500 italic">No roles assigned</p>
+          }
+        </div>
+
+        <!-- Permissions Section -->
+        <div>
+          <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+            <i class="pi pi-key text-green-600"></i>
+            Permissions (from all roles)
+          </h3>
+          @if (getUserPermissions(selectedUser()!).length > 0) {
+            <div class="flex flex-wrap gap-2">
+              @for (permission of getUserPermissions(selectedUser()!); track permission) {
+                <p-chip
+                  [label]="permission"
+                  icon="pi pi-key"
+                  class="bg-green-100 text-green-800"
+                ></p-chip>
+              }
+            </div>
+          } @else {
+            <p class="text-gray-500 italic">No permissions assigned</p>
+          }
+        </div>
+      </div>
+    }
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Close"
+        severity="secondary"
+        (click)="closeRolesPermissionsDialog()"
+      ></p-button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Create/Edit User Dialog -->
+  <p-dialog
+    [header]="dialogMode() === 'create' ? 'Create User' : 'Edit User'"
+    [(visible)]="userDialogVisible"
+    [modal]="true"
+    [style]="{ width: '500px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div class="flex flex-col gap-4 py-4" [formGroup]="userForm">
+      <!-- Username -->
+      <div class="flex flex-col gap-2">
+        <label for="username" class="font-semibold"
+          >Username <span class="text-red-500">*</span></label
+        >
+        <input
+          pInputText
+          id="username"
+          formControlName="username"
+          placeholder="Enter username"
+          class="w-full"
+          [class.ng-invalid]="
+            userForm.get('username')?.invalid &&
+            (userForm.get('username')?.dirty || userForm.get('username')?.touched)
+          "
+        />
+        @if (
+          userForm.get('username')?.invalid &&
+          (userForm.get('username')?.dirty || userForm.get('username')?.touched)
+        ) {
+          <small class="text-red-500">Username is required.</small>
         }
+      </div>
 
-        <ng-template pTemplate="footer">
-            <p-button label="Close" severity="secondary" (click)="closeRolesPermissionsDialog()"></p-button>
-        </ng-template>
-    </p-dialog>
+      <!-- Email -->
+      <div class="flex flex-col gap-2">
+        <label for="email" class="font-semibold">Email <span class="text-red-500">*</span></label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter email"
+          class="w-full"
+          [class.ng-invalid]="
+            userForm.get('email')?.invalid &&
+            (userForm.get('email')?.dirty || userForm.get('email')?.touched)
+          "
+        />
+        @if (
+          userForm.get('email')?.hasError('required') &&
+          (userForm.get('email')?.dirty || userForm.get('email')?.touched)
+        ) {
+          <small class="text-red-500">Email is required.</small>
+        }
+        @if (
+          userForm.get('email')?.hasError('email') &&
+          (userForm.get('email')?.dirty || userForm.get('email')?.touched)
+        ) {
+          <small class="text-red-500">Please enter a valid email address.</small>
+        }
+      </div>
 
-    <!-- Create/Edit User Dialog -->
-    <p-dialog [header]="dialogMode() === 'create' ? 'Create User' : 'Edit User'" [(visible)]="userDialogVisible"
-        [modal]="true" [style]="{ width: '500px' }" [draggable]="false" [resizable]="false">
-
-        <div class="flex flex-col gap-4 py-4" [formGroup]="userForm">
-            <!-- Username -->
-            <div class="flex flex-col gap-2">
-                <label for="username" class="font-semibold">Username <span class="text-red-500">*</span></label>
-                <input pInputText id="username" formControlName="username" placeholder="Enter username" class="w-full"
-                    [class.ng-invalid]="userForm.get('username')?.invalid && (userForm.get('username')?.dirty || userForm.get('username')?.touched)" />
-                @if (userForm.get('username')?.invalid && (userForm.get('username')?.dirty ||
-                userForm.get('username')?.touched)) {
-                <small class="text-red-500">Username is required.</small>
-                }
-            </div>
-
-            <!-- Email -->
-            <div class="flex flex-col gap-2">
-                <label for="email" class="font-semibold">Email <span class="text-red-500">*</span></label>
-                <input pInputText id="email" type="email" formControlName="email" placeholder="Enter email"
-                    class="w-full"
-                    [class.ng-invalid]="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)" />
-                @if (userForm.get('email')?.hasError('required') && (userForm.get('email')?.dirty ||
-                userForm.get('email')?.touched)) {
-                <small class="text-red-500">Email is required.</small>
-                }
-                @if (userForm.get('email')?.hasError('email') && (userForm.get('email')?.dirty ||
-                userForm.get('email')?.touched)) {
-                <small class="text-red-500">Please enter a valid email address.</small>
-                }
-            </div>
-
-            <!-- Password -->
-            @if (dialogMode() === 'create' || userForm.get('password')?.value) {
-            <div class="flex flex-col gap-2">
-                <label for="password" class="font-semibold">
-                    Password
-                    @if(dialogMode() === 'create') { <span class="text-red-500">*</span> }
-                </label>
-                <input pInputText id="password" type="password" formControlName="password" placeholder="Enter password"
-                    class="w-full"
-                    [class.ng-invalid]="userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)" />
-
-                @if (userForm.get('password')?.hasError('required') && (userForm.get('password')?.dirty ||
-                userForm.get('password')?.touched)) {
-                <small class="text-red-500">Password is required.</small>
-                }
-                @if (userForm.get('password')?.hasError('pattern') && (userForm.get('password')?.dirty ||
-                userForm.get('password')?.touched)) {
-                <small class="text-red-500">Password must be at least 8 chars with 1 uppercase, 1 lowercase, 1
-                    number.</small>
-                }
-            </div>
+      <!-- Password -->
+      @if (dialogMode() === 'create' || userForm.get('password')?.value) {
+        <div class="flex flex-col gap-2">
+          <label for="password" class="font-semibold">
+            Password
+            @if (dialogMode() === 'create') {
+              <span class="text-red-500">*</span>
             }
+          </label>
+          <input
+            pInputText
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Enter password"
+            class="w-full"
+            [class.ng-invalid]="
+              userForm.get('password')?.invalid &&
+              (userForm.get('password')?.dirty || userForm.get('password')?.touched)
+            "
+          />
 
-            <!-- Roles -->
-            <div class="flex flex-col gap-2">
-                <label class="font-semibold">Roles <span class="text-red-500">*</span></label>
-                <div class="border border-gray-300 rounded-md p-3 max-h-60 overflow-y-auto"
-                    [class.border-red-500]="userForm.get('roles')?.invalid && userForm.get('roles')?.touched">
-                    @if (availableRoles().length === 0) {
-                    <p class="text-gray-500 text-center py-2">Loading roles...</p>
-                    } @else {
-                    <div class="flex flex-col gap-2">
-                        @for (role of availableRoles(); track role.id) {
-                        <div class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
-                            <p-checkbox [binary]="true" [ngModel]="isRoleSelected(role)"
-                                [ngModelOptions]="{standalone: true}" (ngModelChange)="toggleRole(role)"
-                                [inputId]="'role-' + role.id">
-                            </p-checkbox>
-                            <label [for]="'role-' + role.id" class="cursor-pointer flex-1">
-                                <div class="font-medium text-sm">{{ role.name }}</div>
-                            </label>
-                        </div>
-                        }
-                    </div>
-                    }
-                </div>
-                <div class="text-sm text-gray-600 mt-1">
-                    Selected: <span class="font-semibold">{{ userForm.get('roles')?.value?.length || 0 }}</span> role(s)
-                </div>
-                @if (userForm.get('roles')?.invalid && userForm.get('roles')?.touched) {
-                <small class="text-red-500">At least one role must be selected.</small>
-                }
-            </div>
+          @if (
+            userForm.get('password')?.hasError('required') &&
+            (userForm.get('password')?.dirty || userForm.get('password')?.touched)
+          ) {
+            <small class="text-red-500">Password is required.</small>
+          }
+          @if (
+            userForm.get('password')?.hasError('pattern') &&
+            (userForm.get('password')?.dirty || userForm.get('password')?.touched)
+          ) {
+            <small class="text-red-500"
+              >Password must be at least 8 chars with 1 uppercase, 1 lowercase, 1 number.</small
+            >
+          }
         </div>
+      }
 
-        <ng-template pTemplate="footer">
-            <p-button label="Cancel" severity="secondary" (click)="closeUserDialog()" [text]="true"></p-button>
-            <p-button [label]="dialogMode() === 'create' ? 'Create' : 'Update'" (click)="saveUser()"
-                [loading]="loading()"></p-button>
-        </ng-template>
-    </p-dialog>
+      <!-- Roles -->
+      <div class="flex flex-col gap-2">
+        <label class="font-semibold">Roles <span class="text-red-500">*</span></label>
+        <div
+          class="border border-gray-300 rounded-md p-3 max-h-60 overflow-y-auto"
+          [class.border-red-500]="userForm.get('roles')?.invalid && userForm.get('roles')?.touched"
+        >
+          @if (availableRoles().length === 0) {
+            <p class="text-gray-500 text-center py-2">Loading roles...</p>
+          } @else {
+            <div class="flex flex-col gap-2">
+              @for (role of availableRoles(); track role.id) {
+                <div class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
+                  <p-checkbox
+                    [binary]="true"
+                    [ngModel]="isRoleSelected(role)"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="toggleRole(role)"
+                    [inputId]="'role-' + role.id"
+                  >
+                  </p-checkbox>
+                  <label [for]="'role-' + role.id" class="cursor-pointer flex-1">
+                    <div class="font-medium text-sm">{{ role.name }}</div>
+                  </label>
+                </div>
+              }
+            </div>
+          }
+        </div>
+        <div class="text-sm text-gray-600 mt-1">
+          Selected:
+          <span class="font-semibold">{{ userForm.get('roles')?.value?.length || 0 }}</span> role(s)
+        </div>
+        @if (userForm.get('roles')?.invalid && userForm.get('roles')?.touched) {
+          <small class="text-red-500">At least one role must be selected.</small>
+        }
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        (click)="closeUserDialog()"
+        [text]="true"
+      ></p-button>
+      <p-button
+        [label]="dialogMode() === 'create' ? 'Create' : 'Update'"
+        (click)="saveUser()"
+        [loading]="loading()"
+      ></p-button>
+    </ng-template>
+  </p-dialog>
 </div>
