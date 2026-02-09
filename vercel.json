@@ -1,0 +1,36 @@
+{
+    "rewrites": [
+        {
+            "source": "/auth/:path*",
+            "destination": "http://34.51.253.27:8080/auth/:path*"
+        },
+        {
+            "source": "/product/:path*",
+            "destination": "http://34.51.253.27:8080/product/:path*"
+        },
+        {
+            "source": "/loan/:path*",
+            "destination": "http://34.51.253.27:8080/loan/:path*"
+        },
+        {
+            "source": "/customer-detail/:path*",
+            "destination": "http://34.51.253.27:8080/customer-detail/:path*"
+        },
+        {
+            "source": "/user/:path*",
+            "destination": "http://34.51.253.27:8080/user/:path*"
+        },
+        {
+            "source": "/role/:path*",
+            "destination": "http://34.51.253.27:8080/role/:path*"
+        },
+        {
+            "source": "/plafond/:path*",
+            "destination": "http://34.51.253.27:8080/plafond/:path*"
+        },
+        {
+            "source": "/permission/:path*",
+            "destination": "http://34.51.253.27:8080/permission/:path*"
+        }
+    ]
+}
